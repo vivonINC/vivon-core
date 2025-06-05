@@ -1,9 +1,14 @@
 package com.vivoninc.model;
 
 public class User {
+    int Id;
     String userName;
     String password;
     Friend friends [];
+
+    public User(){
+
+    }
 
     public User(String userName, String password){
         this.userName = userName;
@@ -24,5 +29,13 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public void setId(int id) {
+        Id = id;
+    }
+
+    public int getId() {
+        return Id;
     }
 }

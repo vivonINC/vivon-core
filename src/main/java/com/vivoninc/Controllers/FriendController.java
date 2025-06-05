@@ -20,10 +20,6 @@ public class FriendController {
         // logic to get current user's friends
     }
 
-    @PostMapping
-    public Friend addFriend(@RequestBody SendFriendRequestRequest request) {
-        // logic to add/send friend request
-        //SendFriendRequestRequest must be implemented as POJO
-    }
+
 }
 
