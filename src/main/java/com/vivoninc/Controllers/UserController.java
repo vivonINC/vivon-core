@@ -2,6 +2,8 @@ package com.vivoninc.Controllers;
 
 import java.util.Collection;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,10 +20,11 @@ public class UserController {
         this.userDAO = userDAO;
     }
     
-    @GetMapping("/me")
-    public User getCurrentUser(){
-        //Requires session tokens to implement
-        return null;
+    @GetMapping("/me") //Test in front end
+        public String getMyUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer userId = (Integer) authentication.getPrincipal();
+        return String.valueOf(userId);
     }
 
     @GetMapping("/friends") //Should work

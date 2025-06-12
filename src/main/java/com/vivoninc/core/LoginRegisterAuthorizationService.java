@@ -1,11 +1,24 @@
 package com.vivoninc.core;
 
+import java.util.Collections;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.vivoninc.model.User;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
@@ -53,6 +66,52 @@ public class LoginRegisterAuthorizationService {
     }
     return null;
 }
+
+public Integer validateTokenAndGetUserId(String token) {
+    try {
+        Claims claims = jwTutil.parseToken(token); // You'll need to implement parseToken()
+        return claims.get("userId", Integer.class);
+    } catch (JwtException e) {
+        return null; // Invalid token
+    }
+}
+
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JWTutil jwtUtil;
+
+    public JwtAuthenticationFilter(JWTutil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, java.io.IOException {
+
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            try {
+                Claims claims = jwtUtil.parseToken(token); // Should validate signature & expiration
+                Integer userId = claims.get("userId", Integer.class);
+
+                // You can create a dummy Authentication or use a UserDetailsService
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        userId, null, Collections.emptyList());
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
+
+            } catch (JwtException e) {
+                // Token invalid, do nothing (request will fail security check later)
+            }
+        }
+
+        filterChain.doFilter(request, response);
+    }
+}
+
 
 
 }
