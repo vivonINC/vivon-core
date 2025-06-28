@@ -47,7 +47,6 @@ public class UserDAO {
             .run();
     }
 
-
     public Collection<User> getUsersIncommingFriendReq(int id) {
         String cypher = """
                 MATCH (u:User {id: $id})<-[f:FRIEND_REQ]-(friend:User)

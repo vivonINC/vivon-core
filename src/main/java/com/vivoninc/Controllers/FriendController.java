@@ -1,4 +1,4 @@
-package com.vivoninc.Controllers;
+package com.vivoninc.controllers;
 
 import java.util.List;
 

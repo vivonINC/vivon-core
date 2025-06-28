@@ -1,4 +1,5 @@
 package com.vivoninc.core;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -22,9 +23,10 @@ public class JWTutil {
 
     public String generateToken(int userId) {
         return Jwts.builder()
-                .setSubject(String.valueOf(userId))
+                .claim("userId", userId)  // Store userId as a custom claim
+                .setSubject(String.valueOf(userId))  // Also set as subject for consistency
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 24 hours
                 .signWith(key)
                 .compact();
     }
@@ -40,7 +42,7 @@ public class JWTutil {
 
     public Claims parseToken(String token) throws JwtException {
         return Jwts.parserBuilder()
-                .setSigningKey(key) // previously wrong: "secretKey" (undefined)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

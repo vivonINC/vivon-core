@@ -1,21 +1,22 @@
-package com.vivoninc.Controllers;
+package com.vivoninc.controllers;
 
-import java.util.Collection;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import com.vivoninc.model.User;
-import com.vivoninc.DAOs.UserDAO;
+import com.vivoninc.DTOs.LoginRequest;
 import com.vivoninc.core.LoginRegisterAuthorizationService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class LoginAuthorization {
 
     @Autowired
@@ -28,10 +29,21 @@ public class LoginAuthorization {
         return success ? "Registered!" : "Registration failed";
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password) {
-        String jwt = authService.login(email, password);
-        return jwt != null ? jwt : "Login failed";
+@PostMapping("/login")
+public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
+    String jwt = authService.login(request.getEmail(), request.getPassword());
+    if (jwt != null) {
+        return ResponseEntity.ok(Map.of("token", jwt));
+    } else {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Login failed"));
+    }
+}
+
+
+    @GetMapping("/test")
+    public String test() {
+        System.out.println("Test func entered");
+        return "Test endpoint works!";
     }
 
 }

@@ -12,6 +12,7 @@ import com.vivoninc.model.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
+import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,33 +52,34 @@ public class LoginRegisterAuthorizationService {
     }
 
     public String login(String email, String password) {
-    try {
-        User user = jdbcTemplate.queryForObject(
-            "SELECT id, password FROM users WHERE email = ?",
-            (rs, rowNum) -> new User(rs.getInt("id"), email, rs.getString("password")),
-            email
-        );
+        try {
+            User user = jdbcTemplate.queryForObject(
+                "SELECT id, password FROM users WHERE email = ?",
+                (rs, rowNum) -> new User(rs.getInt("id"), email, rs.getString("password")),
+                email
+            );
 
-        if (passwordEncoder.matches(password, user.getPassword())) {
-            return jwTutil.generateToken(user.getId());
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                return jwTutil.generateToken(user.getId());
+            }
+        } catch (EmptyResultDataAccessException e) {
+            // no user found
         }
-    } catch (EmptyResultDataAccessException e) {
-        // no user found
+        return null;
     }
-    return null;
-}
 
-public Integer validateTokenAndGetUserId(String token) {
-    try {
-        Claims claims = jwTutil.parseToken(token); // You'll need to implement parseToken()
-        return claims.get("userId", Integer.class);
-    } catch (JwtException e) {
-        return null; // Invalid token
+    public Integer validateTokenAndGetUserId(String token) {
+        try {
+            Claims claims = jwTutil.parseToken(token);
+            return claims.get("userId", Integer.class);
+        } catch (JwtException e) {
+            return null; // Invalid token
+        }
     }
 }
 
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JWTutil jwtUtil;
 
@@ -86,32 +88,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        boolean shouldSkip = path.startsWith("/api/auth/");
+        System.out.println("Request path: " + path + ", shouldNotFilter: " + shouldSkip);
+        return shouldSkip;
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, java.io.IOException {
 
+        System.out.println("ERROR: doFilterInternal called for: " + request.getRequestURI() + " (this should NOT happen for api/auth/login)");
+        
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             try {
-                Claims claims = jwtUtil.parseToken(token); // Should validate signature & expiration
+                Claims claims = jwtUtil.parseToken(token);
                 Integer userId = claims.get("userId", Integer.class);
 
-                // You can create a dummy Authentication or use a UserDetailsService
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         userId, null, Collections.emptyList());
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
-
             } catch (JwtException e) {
-                // Token invalid, do nothing (request will fail security check later)
+                // Invalid token; optionally log
+                System.out.println("Invalid JWT token: " + e.getMessage());
             }
         }
 
         filterChain.doFilter(request, response);
     }
-}
-
-
-
 }

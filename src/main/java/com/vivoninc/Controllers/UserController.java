@@ -1,4 +1,4 @@
-package com.vivoninc.Controllers;
+package com.vivoninc.controllers;
 
 import java.util.Collection;
 
@@ -13,7 +13,7 @@ import com.vivoninc.model.User;
 import com.vivoninc.DAOs.UserDAO;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserDAO userDAO;
 
