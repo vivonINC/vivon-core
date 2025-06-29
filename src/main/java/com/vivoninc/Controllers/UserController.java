@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vivoninc.model.User;
 import com.vivoninc.DAOs.UserDAO;
+import com.vivoninc.model.Message;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -46,6 +49,11 @@ public class UserController {
     @PostMapping("/acceptFriendRequest")
     public void acceptFriendRequest(int myID, int friendID){
         userDAO.acceptFriendRequest(myID, friendID);
+    }
+
+    @GetMapping("/messages")
+    public Collection<Message> getMessages(@RequestParam int myID, @RequestParam int otherID) {
+        return userDAO.getMessagesBetweenUsers(myID, otherID);
     }
 
 }

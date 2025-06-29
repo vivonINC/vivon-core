@@ -16,5 +16,5 @@ CREATE TABLE IF NOT EXISTS messages(
     text TEXT,
     timestamp DATE,
     FOREIGN KEY (sender_id) REFERENCES users(id),
-    FOREIGN KEY (reciver_id) REFERENCES users(id)
+    FOREIGN KEY (receiver_id) REFERENCES users(id)
 )
