@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vivoninc.DTOs.LoginRequest;
+import com.vivoninc.DTOs.*;
 import com.vivoninc.core.LoginRegisterAuthorizationService;
 
 @RestController
@@ -24,9 +25,9 @@ public class LoginAuthorization {
 
     @PostMapping("/register")
     //@RequestBody instead of @RequestParam?
-    public String register(@RequestParam String username, @RequestParam String email, @RequestParam String password) {
-        boolean success = authService.register(username, email, password);
-        return success ? "Registered!" : "Registration failed";
+    public String register(@RequestBody Registration request) {
+        String result = authService.register(request.getUsername(), request.getEmail(), request.getPassword());
+        return result;
     }
 
 @PostMapping("/login")

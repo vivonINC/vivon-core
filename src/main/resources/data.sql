@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS messages (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     sender_id INT, 
-    reciver_id INT,
+    receiver_id INT,
     text TEXT,
     timestamp DATE,
     FOREIGN KEY (sender_id) REFERENCES users(id),
-    FOREIGN KEY (reciver_id) REFERENCES users(id)
+    FOREIGN KEY (receiver_id) REFERENCES users(id)
 );
 
 INSERT IGNORE INTO users
@@ -16,7 +16,7 @@ VALUES
     ('BjörnBoy', 'mail', '$2a$10$JyHHmOdhzBSNfDcSsNNv/uT/uEi1BU6amnBZtisEaQo4Vk6LhVFlO', 'placeholder3.png'); --Password = pass
 
 INSERT IGNORE INTO messages
-(sender_id, reciver_id, text, timestamp)
+(sender_id, receiver_id, text, timestamp)
 VALUES
     (1, 2, 'Hey, what''s up?', '2025-06-01'),
     (2, 1, 'Not much, just chilling.', '2025-06-01'),

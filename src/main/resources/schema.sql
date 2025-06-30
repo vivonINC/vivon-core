@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE IF NOT EXISTS messages(
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     sender_id INT, 
-    reciver_id INT,
+    receiver_id INT,
     text TEXT,
     timestamp DATE,
     FOREIGN KEY (sender_id) REFERENCES users(id),

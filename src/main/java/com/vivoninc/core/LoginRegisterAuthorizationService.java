@@ -34,12 +34,12 @@ public class LoginRegisterAuthorizationService {
         this.jwTutil = jwTutil;
     }
 
-    public boolean register(String username, String email, String pass) {
+    public String register(String username, String email, String pass) {
         if (email == null || !email.contains("@")) {
-            return false;
+            return "Not a valid email";
         }
         if (pass == null || pass.length() < 6) {
-            return false;
+            return "Password must be atleast 6 characters";
         }
 
         String encryptedPass = passwordEncoder.encode(pass);
@@ -48,7 +48,7 @@ public class LoginRegisterAuthorizationService {
             username, email, encryptedPass
         );
 
-        return true;
+        return "Account created!";
     }
 
     public String login(String email, String password) {
