@@ -1,12 +1,18 @@
 package com.vivoninc.DAOs;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.vivoninc.model.Message;
 import com.vivoninc.model.User;
 
 @Repository
@@ -14,15 +20,37 @@ public class UserDAO {
 
     private final Neo4jClient neo4jClient;
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate nJdbcTemplate;
 
-    public UserDAO(JdbcTemplate jdbcTemplate, Neo4jClient neo4jClient){
+    public UserDAO(JdbcTemplate jdbcTemplate, Neo4jClient neo4jClient, NamedParameterJdbcTemplate nJdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
         this.neo4jClient = neo4jClient;
+        this.nJdbcTemplate = nJdbcTemplate;
     }
 
-    public Collection<User> getUsersFriends(int id) {
+    public void acceptFriendRequest(int userID, int incFriendID){
+        neo4jClient.query("""
+                MATCH (a:User {id: $fromID}), (b:User {id: $toID})
+                MERGE (b)-[:FRIEND_REQ]->(a)
+            """)
+            .bind(userID).to("fromID")
+            .bind(incFriendID).to("toID")
+            .run();
+    }
+
+    public void sendFriendRequest(int fromID, int toID) {
+        neo4jClient.query("""
+                MATCH (a:User {id: $fromID}), (b:User {id: $toID})
+                MERGE (a)-[:FRIEND_REQ]->(b)
+            """)
+            .bind(fromID).to("fromID")
+            .bind(toID).to("toID")
+            .run();
+    }
+
+    public Collection<User> getUsersIncommingFriendReq(int id) {
         String cypher = """
-                MATCH (u:User {id: $id})-[f]-(friend:User)
+                MATCH (u:User {id: $id})<-[f:FRIEND_REQ]-(friend:User)
                 RETURN friend
                 """;
 
@@ -30,16 +58,67 @@ public class UserDAO {
                 .bind(id).to("id")   // bind the parameter "id"
                 .fetchAs(User.class) // map result to User.class
                 .mappedBy((typeSystem, record) -> {
-                    // Here you manually map the record to a User
-                    // 'friend' is the name of the returned node
                     var node = record.get("friend").asNode();
                     User user = new User();
                     user.setId(node.get("id").asInt());
                     user.setUserName(node.get("name").asString());
-                    // set other properties as needed
                     return user;
                 })
                 .all();  // get List<User>
+    }
+
+     public Collection<User> getUsersFriends(int id) {
+        // Step 1: get friend IDs from Neo4j
+        List<Integer> friendIds = new ArrayList<>(neo4jClient.query("""
+        MATCH (u:User {id: $id})-[:FRIEND]-(friend:User)
+        RETURN friend.id AS friendId
+        """)
+        .bind(id).to("id")
+        .fetchAs(Integer.class)
+        .mappedBy((ts, record) -> record.get("friendId").asInt())
+        .all());
+
+
+        // Step 2: query MySQL for full user info
+        if (friendIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        String sql = "SELECT id, username, avatar FROM users WHERE id IN (:ids)";
+        Map<String, Object> params = Map.of("ids", friendIds);
+
+        List<User> friends = nJdbcTemplate.query(sql, params, (rs, rowNum) -> {
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setUserName(rs.getString("username"));
+            user.setAvatar(rs.getString("avatar"));
+            return user;
+        });
+
+        return friends;
+    }
+
+    public Collection<Message> getMessagesBetweenUsers(int myID, int otherID) {
+        String sql = """
+            SELECT sender_id, receiver_id, text, timestamp 
+            FROM messages 
+            WHERE (sender_id = ? AND receiver_id = ?) 
+            OR (sender_id = ? AND receiver_id = ?) 
+            ORDER BY timestamp DESC 
+            LIMIT 20
+            """;
+        
+        return jdbcTemplate.query(sql, 
+            (rs, rowNum) -> {
+                Message message = new Message();
+                message.setSenderID(rs.getInt("sender_id"));
+                message.setReceiverID(rs.getInt("receiver_id"));
+                message.setText(rs.getString("text"));
+                message.setDateSent(rs.getDate("timestamp"));
+                return message;
+            },
+            myID, otherID, otherID, myID
+        );
     }
     
 }
