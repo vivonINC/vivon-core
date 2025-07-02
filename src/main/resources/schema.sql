@@ -9,12 +9,35 @@ CREATE TABLE IF NOT EXISTS users(
     avatar VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS messages(
+-- Conversations/Channels table
+CREATE TABLE conversations (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    sender_id INT, 
-    receiver_id INT,
-    text TEXT,
-    timestamp DATE,
+    name VARCHAR(255), -- null for DMs, has value for group chats
+    type ENUM('direct', 'group') NOT NULL,
+);
+
+-- Conversation participants
+CREATE TABLE conversation_members (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    conversation_id BIGINT NOT NULL,
+    user_id INT NOT NULL,
+    role ENUM('member', 'admin', 'owner') DEFAULT 'member',
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_member (conversation_id, user_id)
+);
+
+-- Messages table
+CREATE TABLE messages (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    conversation_id BIGINT NOT NULL,
+    sender_id INT NOT NULL,
+    content TEXT NOT NULL,
+    message_type ENUM('text', 'image', 'system') DEFAULT 'text',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL, -- soft delete
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
     FOREIGN KEY (sender_id) REFERENCES users(id),
-    FOREIGN KEY (receiver_id) REFERENCES users(id)
-)
+    INDEX idx_conversation_created (conversation_id, created_at),
+    INDEX idx_sender (sender_id)
+);
