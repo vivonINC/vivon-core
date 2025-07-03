@@ -9,12 +9,14 @@ CREATE TABLE IF NOT EXISTS users(
     avatar VARCHAR(255)
 );
 
--- Conversations/Channels table
 CREATE TABLE conversations (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255), -- null for DMs, has value for group chats
     type ENUM('direct', 'group') NOT NULL,
+    last_message_id BIGINT, -- FK to messages(id)
+    FOREIGN KEY (last_message_id) REFERENCES messages(id)
 );
+
 
 -- Conversation participants
 CREATE TABLE conversation_members (

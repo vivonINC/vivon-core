@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -98,27 +97,10 @@ public class UserDAO {
         return friends;
     }
 
-    public Collection<Message> getMessagesBetweenUsers(int myID, int otherID) {
-        String sql = """
-            SELECT sender_id, receiver_id, text, timestamp 
-            FROM messages 
-            WHERE (sender_id = ? AND receiver_id = ?) 
-            OR (sender_id = ? AND receiver_id = ?) 
-            ORDER BY timestamp DESC 
-            LIMIT 20
-            """;
-        
-        return jdbcTemplate.query(sql, 
-            (rs, rowNum) -> {
-                Message message = new Message();
-                message.setSenderID(rs.getInt("sender_id"));
-                message.setReceiverID(rs.getInt("receiver_id"));
-                message.setText(rs.getString("text"));
-                message.setDateSent(rs.getDate("timestamp"));
-                return message;
-            },
-            myID, otherID, otherID, myID
-        );
+    public Collection<Map<String, Object>> getUserNameAndAvatar(List<String> userIDs){
+        String userIDList = String.join(",", userIDs);
+        String sql = "SELECT username, avatar FROM users WHERE id IN (" + userIDList + ")";
+        return jdbcTemplate.queryForList(sql, userIDs);
     }
-    
+
 }

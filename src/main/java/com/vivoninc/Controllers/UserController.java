@@ -51,9 +51,4 @@ public class UserController {
         userDAO.acceptFriendRequest(myID, friendID);
     }
 
-    @GetMapping("/messages")
-    public Collection<Message> getMessages(@RequestParam int myID, @RequestParam int otherID) {
-        return userDAO.getMessagesBetweenUsers(myID, otherID);
-    }
-
 }

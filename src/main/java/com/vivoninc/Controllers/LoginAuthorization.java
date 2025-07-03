@@ -21,7 +21,7 @@ import com.vivoninc.core.LoginRegisterAuthorizationService;
 public class LoginAuthorization {
 
     @Autowired
-    private LoginRegisterAuthorizationService authService;
+    private LoginRegisterAuthorizationService authService; //Not good
 
     @PostMapping("/register")
     //@RequestBody instead of @RequestParam?
@@ -30,21 +30,14 @@ public class LoginAuthorization {
         return result;
     }
 
-@PostMapping("/login")
-public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
-    String jwt = authService.login(request.getEmail(), request.getPassword());
-    if (jwt != null) {
-        return ResponseEntity.ok(Map.of("token", jwt));
-    } else {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Login failed"));
-    }
-}
-
-
-    @GetMapping("/test")
-    public String test() {
-        System.out.println("Test func entered");
-        return "Test endpoint works!";
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
+        String jwt = authService.login(request.getEmail(), request.getPassword());
+        if (jwt != null) {
+            return ResponseEntity.ok(Map.of("token", jwt));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Login failed"));
+        }
     }
 
 }
