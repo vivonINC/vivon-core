@@ -25,7 +25,6 @@ public class LoginAuthorization {
     private LoginRegisterAuthorizationService authService; //Not good
 
     @PostMapping("/register")
-    //@RequestBody instead of @RequestParam?
     public String register(@RequestBody Registration request) {
         String result = authService.register(request.getUsername(), request.getEmail(), request.getPassword());
         return result;

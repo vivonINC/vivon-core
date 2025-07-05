@@ -8,22 +8,37 @@ import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import com.vivoninc.DAOs.UserDAO;
 
 @Repository
 public class MessageDAO {
     
     private final JdbcTemplate jdbcTemplate;
+    private final UserDAO userDAO;
 
-    public MessageDAO(JdbcTemplate jdbcTemplate){
+    public MessageDAO(JdbcTemplate jdbcTemplate, UserDAO userDAO){
         this.jdbcTemplate = jdbcTemplate;
+        this.userDAO = userDAO;
     }
 
     public Collection<Map<String, Object>> getLast25Messages(int conversationID) {
-        String sql = "SELECT sender_id, content, message_type, created_at, deleted_at " +
-                    "FROM messages WHERE conversation_id = ? " +
-                    "ORDER BY created_at DESC LIMIT 25";
-
-        return jdbcTemplate.queryForList(sql, conversationID);
+        String sql = """
+            SELECT 
+                m.id,
+                m.sender_id,
+                m.content,
+                m.created_at,
+                u.username,
+                u.avatar
+            FROM messages m
+            JOIN users u ON m.sender_id = u.id
+            WHERE m.conversation_id = ? 
+            AND m.deleted_at IS NULL
+            ORDER BY m.created_at DESC 
+            LIMIT 25
+            """;
+        List<Map<String, Object>> temp = jdbcTemplate.queryForList(sql, conversationID);
+        return temp;
     }
 
     public Collection<Map<String, Object>> getConversationMembers(int conversation_id){
