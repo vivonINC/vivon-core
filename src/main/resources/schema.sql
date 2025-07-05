@@ -1,25 +1,30 @@
+-- First drop FK constraint before dropping the dependent table
+ALTER TABLE conversations DROP FOREIGN KEY fk_last_message;
+
+DROP TABLE IF EXISTS conversation_members;
 DROP TABLE IF EXISTS messages;
+DROP TABLE IF EXISTS conversations;
 DROP TABLE IF EXISTS users;
 
-CREATE TABLE IF NOT EXISTS users(
+
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    avatar VARCHAR(255)
+    avatar VARCHAR(255),
+    is_online BOOLEAN NOT NULL
 );
 
-CREATE TABLE conversations (
+-- Create conversations table (initially WITHOUT FK to messages)
+CREATE TABLE IF NOT EXISTS conversations (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255), -- null for DMs, has value for group chats
     type ENUM('direct', 'group') NOT NULL,
-    last_message_id BIGINT, -- FK to messages(id)
-    FOREIGN KEY (last_message_id) REFERENCES messages(id)
+    last_message_id BIGINT -- FK added later
 );
 
-
--- Conversation participants
-CREATE TABLE conversation_members (
+CREATE TABLE IF NOT EXISTS conversation_members (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     conversation_id BIGINT NOT NULL,
     user_id INT NOT NULL,
@@ -29,17 +34,20 @@ CREATE TABLE conversation_members (
     UNIQUE KEY unique_member (conversation_id, user_id)
 );
 
--- Messages table
-CREATE TABLE messages (
+CREATE TABLE IF NOT EXISTS messages (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     conversation_id BIGINT NOT NULL,
     sender_id INT NOT NULL,
     content TEXT NOT NULL,
     message_type ENUM('text', 'image', 'system') DEFAULT 'text',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL, -- soft delete
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
     FOREIGN KEY (sender_id) REFERENCES users(id),
     INDEX idx_conversation_created (conversation_id, created_at),
     INDEX idx_sender (sender_id)
 );
+
+ALTER TABLE conversations
+ADD CONSTRAINT fk_last_message
+FOREIGN KEY (last_message_id) REFERENCES messages(id);

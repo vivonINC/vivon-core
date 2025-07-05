@@ -18,10 +18,6 @@ public class MessageController {
     public MessageController(MessageDAO messageDAO){
         this.messageDAO = messageDAO;
     }
-
-    public String getMethodName(@RequestParam String param) {
-        return new String();
-    }
     
     @GetMapping("/last25")
     public Collection<Map<String, Object>> getLast25Messages(@RequestParam int conversationID){

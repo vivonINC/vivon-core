@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,7 @@ public class LoginAuthorization {
         if (jwt != null) {
             return ResponseEntity.ok(Map.of("token", jwt));
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Login failed"));
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(Map.of("error", "Login failed"));
         }
     }
 

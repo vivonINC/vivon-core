@@ -103,4 +103,14 @@ public class UserDAO {
         return jdbcTemplate.queryForList(sql, userIDs);
     }
 
+    public void setUserIsOnline(int userID){
+        String sql = "UPDATE users SET is_online 1 WHERE id = ?";
+        jdbcTemplate.update(sql, userID);
+    }
+
+        public void setUserIsOffline(int userID){
+        String sql = "UPDATE users SET is_online 0 WHERE id = ?";
+        jdbcTemplate.update(sql, userID);
+    }
+
 }
