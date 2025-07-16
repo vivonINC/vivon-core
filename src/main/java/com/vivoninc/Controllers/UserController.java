@@ -1,6 +1,8 @@
 package com.vivoninc.controllers;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.core.Authentication;
@@ -67,4 +69,11 @@ public class UserController {
         userDAO.declineFriendRequest(myID, friendID);
     }
 
+    @GetMapping(value = "/getUsernameAndAvatar", produces = "application/json; charset=UTF-8")
+    public Collection<Map<String, Object>> getUsernameAndAvatar(@RequestParam String ids){
+        System.out.println("Received IDs: " + ids);
+        List<String> idList = Arrays.asList(ids.split(","));
+        return userDAO.getUserNameAndAvatar(idList);
+    }
 }
+

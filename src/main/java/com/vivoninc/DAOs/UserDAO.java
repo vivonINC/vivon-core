@@ -110,8 +110,6 @@ public void sendFriendRequest(int fromID, int toID) {
         .toList();
 }
 
-
-
      public Collection<User> getUsersFriends(int id) {
         // Step 1: get friend IDs from Neo4j
         List<Integer> friendIds = new ArrayList<>(neo4jClient.query("""
@@ -143,11 +141,18 @@ public void sendFriendRequest(int fromID, int toID) {
         return friends;
     }
 
-    public Collection<Map<String, Object>> getUserNameAndAvatar(List<String> userIDs){
-        String userIDList = String.join(",", userIDs);
-        String sql = "SELECT username, avatar FROM users WHERE id IN (" + userIDList + ")";
-        return jdbcTemplate.queryForList(sql, userIDs);
+public Collection<Map<String, Object>> getUserNameAndAvatar(List<String> userIDs){
+    if (userIDs.isEmpty()) {
+        return new ArrayList<>();
     }
+    
+    String placeholders = String.join(",", Collections.nCopies(userIDs.size(), "?"));
+    String sql = "SELECT username, avatar FROM users WHERE id IN (" + placeholders + ")";
+    
+    // Convert List<String> to Object[] for the query
+    Object[] params = userIDs.toArray();
+    return jdbcTemplate.queryForList(sql, params);
+}
 
     public void setUserIsOnline(int userID){
         String sql = "UPDATE users SET is_online 1 WHERE id = ?";
