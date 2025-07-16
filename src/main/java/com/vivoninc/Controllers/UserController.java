@@ -1,6 +1,7 @@
 package com.vivoninc.controllers;
 
 import java.util.Collection;
+import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,10 +33,12 @@ public class UserController {
         return String.valueOf(userId);
     }
 
-    @GetMapping("/friends") //Should work
-        public Collection<User> getUsersFriends(@RequestParam int id){
-            return userDAO.getUsersFriends(id);
-        }
+    @GetMapping("/friends")
+    public Collection<User> getUsersFriends(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer userId = (Integer) authentication.getPrincipal();
+        return userDAO.getUsersFriends(userId);
+    }
     
     @GetMapping("/incFriendRequests")
     public Collection<User> getFriendRequests(@RequestParam int id){
@@ -43,13 +46,25 @@ public class UserController {
     }
 
     @PostMapping("/sendFriendRequest")
-    public void sendFriendRequest(@RequestBody int myID, @RequestBody int friendID){
-        userDAO.sendFriendRequest(myID, friendID);
+    public void sendFriendRequest(@RequestBody Map<String, Object> request){
+        String username = (String) request.get("username");
+        int myID = (Integer) request.get("myID"); // You need to send myID from frontend
+        int id = userDAO.getIDFromUsername(username);
+        userDAO.sendFriendRequest(myID, id);
     }
 
     @PostMapping("/acceptFriendRequest")
-    public void acceptFriendRequest(@RequestBody int myID, @RequestBody int friendID){
+    public void acceptFriendRequest(@RequestBody Map<String, Integer> request){
+        int myID = request.get("myID");
+        int friendID = request.get("friendID");
         userDAO.acceptFriendRequest(myID, friendID);
+    }
+
+    @PostMapping("/declineFriendRequest")
+    public void declineFriendRequest(@RequestBody Map<String, Integer> request){
+        int myID = request.get("myID");
+        int friendID = request.get("friendID");
+        userDAO.declineFriendRequest(myID, friendID);
     }
 
 }

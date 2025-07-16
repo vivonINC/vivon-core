@@ -4,7 +4,7 @@ public class User {
     int Id;
     String email;
     String avatar; //Path
-    String userName;
+    String username;
     String password;
     Friend friends [];
 
@@ -12,8 +12,8 @@ public class User {
 
     }
 
-    public User(String userName, String password){
-        this.userName = userName;
+    public User(String username, String password){
+        this.username = username;
         this.password = password;
     }
 
@@ -40,11 +40,11 @@ public class User {
     }
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
 
     public void setId(int id) {

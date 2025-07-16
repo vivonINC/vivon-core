@@ -1,5 +1,7 @@
 package com.vivoninc.DAOs;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,6 +11,8 @@ import java.util.Map;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.vivoninc.model.Message;
@@ -27,44 +31,86 @@ public class UserDAO {
         this.nJdbcTemplate = nJdbcTemplate;
     }
 
-    public void acceptFriendRequest(int userID, int incFriendID){
+    public void acceptFriendRequest(int userID, int requesterID){
+        // Remove the friend request and create mutual friendship
         neo4jClient.query("""
-                MATCH (a:User {id: $fromID}), (b:User {id: $toID})
-                MERGE (b)-[:FRIEND_REQ]->(a)
+                MATCH (requester:User {id: $requesterID})-[req:FRIEND_REQ]->(user:User {id: $userID})
+                DELETE req
+                MERGE (requester)-[:FRIEND]-(user)
             """)
-            .bind(userID).to("fromID")
-            .bind(incFriendID).to("toID")
+            .bind(userID).to("userID")
+            .bind(requesterID).to("requesterID")
             .run();
+
+        // Create conversation and add both users
+        String sql = "INSERT INTO conversations (type) VALUES ('direct')";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            return ps;
+        }, keyHolder);
+        
+        long conversationId = keyHolder.getKey().longValue();
+        
+        // Add both users to the conversation
+        String memberSql = "INSERT INTO conversation_members (conversation_id, user_id) VALUES (?, ?)";
+        jdbcTemplate.update(memberSql, conversationId, userID);
+        jdbcTemplate.update(memberSql, conversationId, requesterID);
     }
 
-    public void sendFriendRequest(int fromID, int toID) {
-        neo4jClient.query("""
-                MATCH (a:User {id: $fromID}), (b:User {id: $toID})
-                MERGE (a)-[:FRIEND_REQ]->(b)
-            """)
-            .bind(fromID).to("fromID")
-            .bind(toID).to("toID")
-            .run();
-    }
+    public void declineFriendRequest(int userID, int incFriendID){
+    neo4jClient.query("""
+            MATCH (a:User {id: $fromID})-[req:FRIEND_REQ]-(b:User {id: $toID})
+            DELETE req
+        """)
+        .bind(userID).to("fromID")
+        .bind(incFriendID).to("toID")
+        .run();
+}
 
-    public Collection<User> getUsersIncommingFriendReq(int id) {
-        String cypher = """
-                MATCH (u:User {id: $id})<-[f:FRIEND_REQ]-(friend:User)
-                RETURN friend
-                """;
+public void sendFriendRequest(int fromID, int toID) {
+    neo4jClient.query("""
+            MATCH (a:User {id: $fromID})
+            WITH a
+            MATCH (b:User {id: $toID})
+            MERGE (a)-[:FRIEND_REQ]->(b)
+        """)
+        .bind(fromID).to("fromID")
+        .bind(toID).to("toID")
+        .run();
+}
 
-        return neo4jClient.query(cypher)
-                .bind(id).to("id")   // bind the parameter "id"
-                .fetchAs(User.class) // map result to User.class
-                .mappedBy((typeSystem, record) -> {
-                    var node = record.get("friend").asNode();
+
+ public Collection<User> getUsersIncommingFriendReq(int id) {
+    String cypher = """
+        MATCH (u:User {id: $id})<-[f:FRIEND_REQ]-(friend:User)
+        RETURN friend.id AS friendId
+        """;
+
+    return neo4jClient.query(cypher)
+        .bind(id).to("id")
+        .fetchAs(Integer.class)
+        .mappedBy((typeSystem, record) -> record.get("friendId").asInt())
+        .all()
+        .stream()
+        .map(friendId -> {
+            // Query MySQL for the full user data
+            return jdbcTemplate.queryForObject(
+                "SELECT id, username, avatar FROM users WHERE id = ?",
+                new Object[]{friendId},
+                (rs, rowNum) -> {
                     User user = new User();
-                    user.setId(node.get("id").asInt());
-                    user.setUserName(node.get("name").asString());
+                    user.setId(rs.getInt("id"));
+                    user.setUserName(rs.getString("username"));
+                    user.setAvatar(rs.getString("avatar"));
                     return user;
-                })
-                .all();  // get List<User>
-    }
+                }
+            );
+        })
+        .toList();
+}
+
+
 
      public Collection<User> getUsersFriends(int id) {
         // Step 1: get friend IDs from Neo4j
@@ -108,9 +154,14 @@ public class UserDAO {
         jdbcTemplate.update(sql, userID);
     }
 
-        public void setUserIsOffline(int userID){
+    public void setUserIsOffline(int userID){
         String sql = "UPDATE users SET is_online 0 WHERE id = ?";
         jdbcTemplate.update(sql, userID);
     }
+
+    public Integer getIDFromUsername(String username){
+        return jdbcTemplate.queryForObject("SELECT id FROM users WHERE username = ?", Integer.class, username);
+    }
+
 
 }
