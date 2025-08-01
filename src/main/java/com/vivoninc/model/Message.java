@@ -1,10 +1,14 @@
 package com.vivoninc.model;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Message {
     private int ID;
+    @JsonProperty("conversation_id")
     private int conversationID;
     private String content;
+        @JsonProperty("sender_id")
     private int senderID;
+    @JsonProperty("created_at")
     private java.sql.Timestamp dateSent;
     private java.sql.Timestamp dateDeleted;
     public enum MsgType{

@@ -69,7 +69,7 @@ public class UserController {
         userDAO.declineFriendRequest(myID, friendID);
     }
 
-    @GetMapping(value = "/getUsernameAndAvatar", produces = "application/json; charset=UTF-8")
+    @GetMapping("/getUsernameAndAvatar")
     public Collection<Map<String, Object>> getUsernameAndAvatar(@RequestParam String ids){
         System.out.println("Received IDs: " + ids);
         List<String> idList = Arrays.asList(ids.split(","));
