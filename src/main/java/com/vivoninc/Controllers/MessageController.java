@@ -58,6 +58,11 @@ public class MessageController {
     public void postMethodName(@RequestBody Message message) {
         messageDAO.send(message);
     }
+
+    @PostMapping("/addToConv")
+    public void addUserToConversation(@RequestBody Map<String, Integer> body) {
+        messageDAO.addUserToConversation(body.get("userID"), body.get("ConvoID"));
+    }
     
     
 }

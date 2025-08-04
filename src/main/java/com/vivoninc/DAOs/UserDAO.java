@@ -18,6 +18,8 @@ import org.springframework.stereotype.Repository;
 import com.vivoninc.model.Message;
 import com.vivoninc.model.User;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Repository
 public class UserDAO {
 
@@ -68,46 +70,93 @@ public class UserDAO {
         .run();
 }
 
-public void sendFriendRequest(int fromID, int toID) {
-    neo4jClient.query("""
-            MATCH (a:User {id: $fromID})
-            WITH a
-            MATCH (b:User {id: $toID})
-            MERGE (a)-[:FRIEND_REQ]->(b)
-        """)
-        .bind(fromID).to("fromID")
-        .bind(toID).to("toID")
-        .run();
+@Transactional(transactionManager = "neo4jTransactionManager")
+public void sendFriendRequest(int fromUserId, int toUserId) {
+    System.out.println("Sending friend request from user " + fromUserId + " to user " + toUserId);
+    
+    try {
+        // Create the friend request relationship directly
+        String cypher = """
+            MATCH (from:User {id: $fromId}), (to:User {id: $toId})
+            MERGE (from)-[:FRIEND_REQ]->(to)
+            """;
+
+        neo4jClient.query(cypher)
+            .bind(fromUserId).to("fromId")
+            .bind(toUserId).to("toId")
+            .run();
+            
+        System.out.println("Friend request sent successfully");
+        
+    } catch (Exception e) {
+        System.err.println("Error sending friend request: " + e.getMessage());
+        e.printStackTrace();
+        throw e;
+    }
 }
 
 
- public Collection<User> getUsersIncommingFriendReq(int id) {
+@Transactional(readOnly = true)
+public Collection<User> getUsersIncommingFriendReq(int id) {
+    System.out.println("Getting incoming friend requests for user ID: " + id);
+    
     String cypher = """
-        MATCH (u:User {id: $id})<-[f:FRIEND_REQ]-(friend:User)
+        MATCH (u:User {id: $id})<-[:FRIEND_REQ]-(friend:User)
         RETURN friend.id AS friendId
         """;
 
-    return neo4jClient.query(cypher)
-        .bind(id).to("id")
-        .fetchAs(Integer.class)
-        .mappedBy((typeSystem, record) -> record.get("friendId").asInt())
-        .all()
-        .stream()
-        .map(friendId -> {
-            // Query MySQL for the full user data
-            return jdbcTemplate.queryForObject(
-                "SELECT id, username, avatar FROM users WHERE id = ?",
-                new Object[]{friendId},
-                (rs, rowNum) -> {
-                    User user = new User();
-                    user.setId(rs.getInt("id"));
-                    user.setUserName(rs.getString("username"));
-                    user.setAvatar(rs.getString("avatar"));
+    try {
+        List<Integer> friendIds = (List<Integer>) neo4jClient.query(cypher)
+            .bind(id).to("id")
+            .fetchAs(Integer.class)
+            .mappedBy((typeSystem, record) -> {
+                int friendId = record.get("friendId").asInt();
+                System.out.println("Found incoming friend request from user ID: " + friendId);
+                return friendId;
+            })
+            .all();
+
+        System.out.println("Total incoming friend requests found: " + friendIds.size());
+
+        if (friendIds.isEmpty()) {
+            System.out.println("No incoming friend requests found for user " + id);
+            return new ArrayList<>();
+        }
+
+        // Query MySQL for the full user data
+        List<User> users = friendIds.stream()
+            .map(friendId -> {
+                try {
+                    System.out.println("Fetching user data from MySQL for ID: " + friendId);
+                    User user = jdbcTemplate.queryForObject(
+                        "SELECT id, username, avatar FROM users WHERE id = ?",
+                        new Object[]{friendId},
+                        (rs, rowNum) -> {
+                            User u = new User();
+                            u.setId(rs.getInt("id"));
+                            u.setUserName(rs.getString("username"));
+                            u.setAvatar(rs.getString("avatar"));
+                            return u;
+                        }
+                    );
+                    System.out.println("Successfully fetched user: " + user.getUserName());
                     return user;
+                } catch (Exception e) {
+                    System.err.println("Error fetching user data for ID " + friendId + ": " + e.getMessage());
+                    return null;
                 }
-            );
-        })
-        .toList();
+            })
+            .filter(user -> user != null)
+            .toList();
+            
+        System.out.println("Returning " + users.size() + " users with friend requests");
+        return users;
+        
+    } catch (Exception e) {
+        System.err.println("Error executing friend request query: " + e.getMessage());
+        e.printStackTrace();
+        return new ArrayList<>();
+    }
 }
 
      public Collection<User> getUsersFriends(int id) {

@@ -236,7 +236,7 @@ public class MessageDAO {
      * @param role The role to assign (member, admin, owner)
      * @return true if user was added successfully
      */
-    public boolean addUserToConversation(long conversationId, int userId, String role) {
+    public boolean addUserToConversation(long conversationId, int userId) {
         // Check if user is already in the conversation
         if (isUserMemberOfConversation(userId, conversationId)) {
             return false;
@@ -247,7 +247,7 @@ public class MessageDAO {
             VALUES (?, ?, ?)
             """;
         
-        int rowsAffected = jdbcTemplate.update(sql, conversationId, userId, role);
+        int rowsAffected = jdbcTemplate.update(sql, conversationId, userId, "member");
         return rowsAffected > 0;
     }
 

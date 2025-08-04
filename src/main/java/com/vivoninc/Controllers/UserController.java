@@ -50,7 +50,7 @@ public class UserController {
     @PostMapping("/sendFriendRequest")
     public void sendFriendRequest(@RequestBody Map<String, Object> request){
         String username = (String) request.get("username");
-        int myID = (Integer) request.get("myID"); // You need to send myID from frontend
+        int myID = (Integer) request.get("myID");
         int id = userDAO.getIDFromUsername(username);
         userDAO.sendFriendRequest(myID, id);
     }
