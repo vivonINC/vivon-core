@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.neo4j.bolt.connection.ResultSummary;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -71,27 +72,43 @@ public class UserDAO {
 }
 
 @Transactional(transactionManager = "neo4jTransactionManager")
-public void sendFriendRequest(int fromUserId, int toUserId) {
+public String sendFriendRequest(int fromUserId, int toUserId) {
     System.out.println("Sending friend request from user " + fromUserId + " to user " + toUserId);
     
     try {
+
+boolean isFriend = neo4jClient.query("""
+        MATCH (from:User {id: $fromID})-[:FRIEND]-(to:User {id: $toID})
+        RETURN count(*) > 0 AS isFriend
+    """)
+    .bind(fromUserId).to("fromID")
+    .bind(toUserId).to("toID")
+    .fetch()
+    .one()
+    .map(result -> (Boolean) result.get("isFriend"))
+    .orElse(false);
+
+
+
+    if (isFriend) {
+        return("That user is already your friend");
+    }
+
         // Create the friend request relationship directly
-        String cypher = """
+        String cypher2 = """
             MATCH (from:User {id: $fromId}), (to:User {id: $toId})
             MERGE (from)-[:FRIEND_REQ]->(to)
             """;
 
-        neo4jClient.query(cypher)
+        neo4jClient.query(cypher2)
             .bind(fromUserId).to("fromId")
             .bind(toUserId).to("toId")
             .run();
             
-        System.out.println("Friend request sent successfully");
+        return("Friend request sent successfully");
         
     } catch (Exception e) {
-        System.err.println("Error sending friend request: " + e.getMessage());
-        e.printStackTrace();
-        throw e;
+        return("Error sending friend request: " + e.getMessage());
     }
 }
 

@@ -23,7 +23,6 @@ public class Neo4jInitializer {
             testConnection();
             
             // Clear existing data (optional)
-            clearDatabase();
             
             // Insert mock data
             insertMockData();

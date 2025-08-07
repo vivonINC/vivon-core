@@ -55,8 +55,9 @@ public class MessageController {
     }
 
     @PostMapping("/send")
-    public void postMethodName(@RequestBody Message message) {
+    public Message postMethodName(@RequestBody Message message) {
         messageDAO.send(message);
+        return message;
     }
 
     @PostMapping("/addToConv")

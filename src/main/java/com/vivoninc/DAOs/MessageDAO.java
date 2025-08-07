@@ -43,7 +43,7 @@ public class MessageDAO {
             JOIN users u ON m.sender_id = u.id
             WHERE m.conversation_id = ? 
             AND m.deleted_at IS NULL
-            ORDER BY m.created_at DESC 
+            ORDER BY m.created_at ASC 
             LIMIT 25
             """;
         List<Map<String, Object>> temp = jdbcTemplate.queryForList(sql, conversationID);
@@ -236,7 +236,7 @@ public class MessageDAO {
      * @param role The role to assign (member, admin, owner)
      * @return true if user was added successfully
      */
-    public boolean addUserToConversation(long conversationId, int userId) {
+    public boolean addUserToConversation(int userId, long conversationId) {
         // Check if user is already in the conversation
         if (isUserMemberOfConversation(userId, conversationId)) {
             return false;
