@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.neo4j.bolt.connection.ResultSummary;
+import org.neo4j.driver.Value;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -230,9 +231,56 @@ public Collection<Map<String, Object>> getUserNameAndAvatar(List<String> userIDs
         jdbcTemplate.update(sql, userID);
     }
 
+    public void removeFriend(int userID, int userIDtoRemove){
+        String cypher = """
+        MATCH (remover:User {id: $userID})-[f:FRIEND]-(other:User {id: $userIDtoRemove})
+        DELETE f
+        """;
+
+        neo4jClient.query(cypher)
+        .bind(userID).to("userID")
+        .bind(userIDtoRemove).to("userIDtoRemove")
+        .run();
+    }
+
+    public void addFriendDescription(int fromID, int toID, String desc){
+        String propertyName = "desc_" + fromID; // e.g., "desc_123"
+        
+        String cypher = """
+        MATCH (from:User {id: $fromID})-[f:FRIEND]-(to:User {id: $toID})
+        SET f[$propertyName] = $desc
+        """;
+
+        neo4jClient.query(cypher)
+        .bind(fromID).to("fromID")
+        .bind(toID).to("toID")
+        .bind(desc).to("desc")
+        .bind(propertyName).to("propertyName")
+        .run();
+    }
+
     public Integer getIDFromUsername(String username){
         return jdbcTemplate.queryForObject("SELECT id FROM users WHERE username = ?", Integer.class, username);
     }
 
+    public String getFriendDescription(String fromID, String toID) {
+        String propertyName = "desc_" + fromID;
+        String cypher = """
+            MATCH (from:User {id: $fromID})-[f:FRIEND]-(to:User {id: $toID})
+            RETURN f[$propertyName] AS description
+        """;
+
+        return neo4jClient.query(cypher)
+            .bind(Integer.parseInt(fromID)).to("fromID")
+            .bind(Integer.parseInt(toID)).to("toID")
+            .bind(propertyName).to("propertyName")
+            .fetchAs(String.class)
+            .mappedBy((typeSystem, record) -> {
+                Value descValue = record.get("description");
+                return descValue.isNull() ? null : descValue.asString(); // Handle null values
+            })
+            .one()
+            .orElse(null);
+    }
 
 }

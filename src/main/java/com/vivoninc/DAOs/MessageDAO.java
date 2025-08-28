@@ -43,12 +43,36 @@ public class MessageDAO {
             JOIN users u ON m.sender_id = u.id
             WHERE m.conversation_id = ? 
             AND m.deleted_at IS NULL
-            ORDER BY m.created_at ASC 
+            ORDER BY m.created_at DESC
             LIMIT 25
             """;
         List<Map<String, Object>> temp = jdbcTemplate.queryForList(sql, conversationID);
+        Collections.reverse(temp);
         return temp;
     }
+
+    public Collection<Map<String, Object>> getMessagesBefore(int conversationID, String beforeTimestamp, int limit) {
+    String sql = """
+        SELECT 
+            m.id,
+            m.sender_id,
+            m.content,
+            m.created_at,
+            u.username,
+            u.avatar
+        FROM messages m
+        JOIN users u ON m.sender_id = u.id
+        WHERE m.conversation_id = ? 
+        AND m.created_at < ?
+        AND m.deleted_at IS NULL
+        ORDER BY m.created_at DESC 
+        LIMIT ?
+        """;
+    List<Map<String, Object>> temp = jdbcTemplate.queryForList(sql, conversationID, beforeTimestamp, limit);
+    
+    Collections.reverse(temp);
+    return temp;
+}
 
     public Collection<Map<String, Object>> getConversationMembers(int conversation_id){
         String sql = "SELECT user_id FROM conversation_members WHERE conversation_id = ?";

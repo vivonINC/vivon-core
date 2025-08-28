@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vivoninc.DAOs.MessageDAO;
 import com.vivoninc.model.Message;
 
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,5 +68,11 @@ public class MessageController {
         messageDAO.addUserToConversation(body.get("userID"), body.get("ConvoID"));
     }
     
-    
+    @GetMapping("/before")
+public Collection<Map<String, Object>> getMessagesBefore(
+        @RequestParam int conversationID,
+        @RequestParam String beforeTimestamp,
+        @RequestParam(defaultValue = "25") int limit) {
+           return messageDAO.getMessagesBefore(conversationID, beforeTimestamp, limit);
+        }
 }

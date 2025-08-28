@@ -7,8 +7,10 @@ import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -75,5 +77,21 @@ public class UserController {
         List<String> idList = Arrays.asList(ids.split(","));
         return userDAO.getUserNameAndAvatar(idList);
     }
+
+    @DeleteMapping("/removeFriend")
+    public void removeFriend(@RequestParam int fromID, @RequestParam int toID){
+        userDAO.removeFriend(fromID, toID);
+    }
+
+    @PutMapping("/addDescription")
+    public void setFriendDescription(@RequestBody Map<String, String> request){
+        userDAO.addFriendDescription(Integer.valueOf(request.get("myID")), Integer.valueOf(request.get("friendID")), request.get("description"));
+    }
+
+    @GetMapping("/getFriendDescription")
+    public String getFriendDescription(@RequestParam int fromID, int toID) {
+        return userDAO.getFriendDescription(String.valueOf(fromID), String.valueOf(toID));
+    }
+    
 }
 
