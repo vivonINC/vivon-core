@@ -20,6 +20,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry
             .addHandler(chatWebSocketHandler, "/ws/chat")
             .addInterceptors(jwtInterceptor)
-            .setAllowedOrigins("*"); // Or set your frontend URL
+            .setAllowedOrigins(System.getenv("FRONTEND_URL")); // Use environment variable
     }
 }

@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.bolt.connection.ResultSummary;
 import org.neo4j.driver.Value;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +16,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.vivoninc.model.Message;
 import com.vivoninc.model.User;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +44,7 @@ public class UserDAO {
             .bind(requesterID).to("requesterID")
             .run();
 
-        // Create conversation and add both users
+        // Create convo and add both users
         String sql = "INSERT INTO conversations (type) VALUES ('direct')";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

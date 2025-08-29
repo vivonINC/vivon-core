@@ -13,7 +13,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vivoninc.DAOs.UserDAO;
 import com.vivoninc.model.Message;
 
 import java.sql.PreparedStatement;
@@ -107,12 +106,6 @@ public class MessageDAO {
         return jdbcTemplate.queryForList(finalSql, conversationIds.toArray());
     }
 
-    /**
-     * Find a direct conversation between two users
-     * @param userId1 First user ID
-     * @param userId2 Second user ID
-     * @return Optional containing conversation details if found
-     */
     public Optional<Map<String, Object>> findDirectConversation(int userId1, int userId2) {
         String sql = """
             SELECT DISTINCT c.id, c.name, c.type, c.last_message_id
@@ -133,30 +126,23 @@ public class MessageDAO {
         return Optional.of(results.get(0));
     }
 
-    /**
-     * Create a new conversation and add participants
-     * @param conversationType Type of conversation ('direct' or 'group')
-     * @param conversationName Name of conversation (null for direct messages)
-     * @param participantIds List of user IDs to add to the conversation
-     * @return The ID of the newly created conversation
-     */
     @Transactional
     public Long createConversation(String conversationType, String conversationName, List<Integer> participantIds) {
         if (participantIds == null || participantIds.isEmpty()) {
             throw new IllegalArgumentException("Participant list cannot be empty");
         }
 
-        // Validate conversation type
+        //check conversation type
         if (!"direct".equals(conversationType) && !"group".equals(conversationType)) {
             throw new IllegalArgumentException("Conversation type must be 'direct' or 'group'");
         }
 
-        // For direct conversations, ensure exactly 2 participants
+        // For direct conversations ensure 2 participants
         if ("direct".equals(conversationType) && participantIds.size() != 2) {
             throw new IllegalArgumentException("Direct conversations must have exactly 2 participants");
         }
 
-        // Check if direct conversation already exists
+        // Check if direct conversation exists
         if ("direct".equals(conversationType)) {
             Optional<Map<String, Object>> existing = findDirectConversation(
                 participantIds.get(0), participantIds.get(1)
@@ -166,7 +152,7 @@ public class MessageDAO {
             }
         }
 
-        // Create the conversation
+        // Create conversation
         String insertConversationSql = """
             INSERT INTO conversations (name, type) VALUES (?, ?)
             """;
@@ -182,7 +168,7 @@ public class MessageDAO {
         
         Long conversationId = keyHolder.getKey().longValue();
         
-        // Add participants to the conversation
+        // Add users to convo
         String insertMemberSql = """
             INSERT INTO conversation_members (conversation_id, user_id, role) VALUES (?, ?, ?)
             """;
@@ -191,7 +177,7 @@ public class MessageDAO {
             Integer userId = participantIds.get(i);
             String role = "member"; // Default role
             
-            // For group conversations, make the first participant the owner
+            // For group conversations make the first participant owner
             if ("group".equals(conversationType) && i == 0) {
                 role = "owner";
             }
@@ -202,11 +188,7 @@ public class MessageDAO {
         return conversationId;
     }
 
-    /**
-     * Get all conversations for a user with member information
-     * @param userId The user ID
-     * @return Collection of conversations with member details
-     */
+
     public Collection<Map<String, Object>> getUserConversationsWithMembers(int userId) {
         String sql = """
             SELECT 
@@ -237,12 +219,6 @@ public class MessageDAO {
         return jdbcTemplate.queryForList(sql, userId);
     }
 
-    /**
-     * Check if a user is a member of a conversation
-     * @param userId The user ID
-     * @param conversationId The conversation ID
-     * @return true if user is a member, false otherwise
-     */
     public boolean isUserMemberOfConversation(int userId, long conversationId) {
         String sql = """
             SELECT COUNT(*) FROM conversation_members 
