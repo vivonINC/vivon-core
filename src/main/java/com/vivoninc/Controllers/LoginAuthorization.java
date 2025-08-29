@@ -21,8 +21,8 @@ import com.vivoninc.core.LoginRegisterAuthorizationService;
 @RequestMapping("/api/auth")
 public class LoginAuthorization {
 
-    @Autowired
-    private LoginRegisterAuthorizationService authService; //Not good
+    @Autowired //Not good
+    private LoginRegisterAuthorizationService authService; 
 
     @PostMapping("/register")
     public String register(@RequestBody Registration request) {

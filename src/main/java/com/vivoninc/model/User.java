@@ -6,7 +6,6 @@ public class User {
     String avatar; //Path
     String username;
     String password;
-    Friend friends [];
 
     public User(){
 
