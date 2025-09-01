@@ -1,0 +1,13 @@
+com\vivoninc\Controllers\UserController.class
+com\vivoninc\core\LoginRegisterAuthorizationService.class
+com\vivoninc\model\Friend.class
+com\vivoninc\DTOs\LoginRequest.class
+com\vivoninc\core\CoreApplication.class
+com\vivoninc\DAOs\UserDAO.class
+com\vivoninc\Controllers\FriendController.class
+com\vivoninc\core\Neo4jInitializer.class
+com\vivoninc\core\LoginRegisterAuthorizationService$JwtAuthenticationFilter.class
+com\vivoninc\core\JWTutil.class
+com\vivoninc\model\User.class
+com\vivoninc\core\SecurityConfig.class
+com\vivoninc\Controllers\LoginAuthorization.class
