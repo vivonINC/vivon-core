@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,31 +21,23 @@ import com.vivoninc.core.LoginRegisterAuthorizationService;
 @RequestMapping("/api/auth")
 public class LoginAuthorization {
 
-    @Autowired
-    private LoginRegisterAuthorizationService authService;
+    @Autowired //Not good
+    private LoginRegisterAuthorizationService authService; 
 
     @PostMapping("/register")
-    //@RequestBody instead of @RequestParam?
     public String register(@RequestBody Registration request) {
         String result = authService.register(request.getUsername(), request.getEmail(), request.getPassword());
         return result;
     }
 
-@PostMapping("/login")
-public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
-    String jwt = authService.login(request.getEmail(), request.getPassword());
-    if (jwt != null) {
-        return ResponseEntity.ok(Map.of("token", jwt));
-    } else {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Login failed"));
-    }
-}
-
-
-    @GetMapping("/test")
-    public String test() {
-        System.out.println("Test func entered");
-        return "Test endpoint works!";
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
+        String jwt = authService.login(request.getEmail(), request.getPassword());
+        if (jwt != null) {
+            return ResponseEntity.ok(Map.of("token", jwt));
+        } else {
+            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(Map.of("error", "Login failed"));
+        }
     }
 
 }

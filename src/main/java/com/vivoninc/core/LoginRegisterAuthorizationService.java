@@ -1,11 +1,19 @@
 package com.vivoninc.core;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.Collections;
 
+import org.neo4j.cypherdsl.core.KeyValueMapEntry;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.neo4j.core.Neo4jClient;
+import org.springframework.data.neo4j.core.Neo4jTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.vivoninc.model.User;
@@ -26,12 +34,38 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class LoginRegisterAuthorizationService {
 
     private final JdbcTemplate jdbcTemplate;
+    private final Neo4jClient neo4jClient;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final JWTutil jwTutil;
 
-    public LoginRegisterAuthorizationService(JdbcTemplate jdbcTemplate, JWTutil jwTutil) {
+    public LoginRegisterAuthorizationService(JdbcTemplate jdbcTemplate, JWTutil jwTutil, Neo4jClient neo4jClient) {
         this.jdbcTemplate = jdbcTemplate;
         this.jwTutil = jwTutil;
+        this.neo4jClient = neo4jClient;
+    }
+
+    @Transactional("neo4jTransactionManager")
+    public void createUserNode(int userId) {
+        System.out.println("Creating Neo4j node for user id: " + userId);
+        
+        try {
+            String cypher = """
+                MERGE (u:User {id: $userId})
+                RETURN u.id
+                """;
+
+            var result = neo4jClient.query(cypher)
+                .bind(userId).to("userId")
+                .fetch()
+                .all();
+                
+            System.out.println("Neo4j user node created: " + result);
+            
+        } catch (Exception e) {
+            System.err.println("Error creating Neo4j user node: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public String register(String username, String email, String pass) {
@@ -39,16 +73,41 @@ public class LoginRegisterAuthorizationService {
             return "Not a valid email";
         }
         if (pass == null || pass.length() < 6) {
-            return "Password must be atleast 6 characters";
+            return "Password must be at least 6 characters";
+        }
+        Integer count = jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM users WHERE email = ?", Integer.class, email
+        );
+        if (count != null && count > 0) {
+            return "Email already in use";
+        }
+
+       Integer usernameCount = jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM users WHERE username = ?", Integer.class, username
+        );
+        if (usernameCount != null && usernameCount > 0) {
+            return "Username already in use";
         }
 
         String encryptedPass = passwordEncoder.encode(pass);
-        jdbcTemplate.update(
-            "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
-            username, email, encryptedPass
-        );
+        
+        // Insert into MySQL and get the generated ID
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS
+            );
+            ps.setString(1, username);
+            ps.setString(2, email);
+            ps.setString(3, encryptedPass);
+            return ps;
+        }, keyHolder);
 
-        return "Account created!";
+        // Create Neo4j node
+        createUserNode(keyHolder.getKey().intValue());
+        
+        return "Registration successful";
     }
 
     public String login(String email, String password) {

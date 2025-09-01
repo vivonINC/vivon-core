@@ -39,7 +39,7 @@ public class SecurityConfig {
                 System.out.println("SECURITY CONFIG: Session management set to stateless");
             })
             .authorizeHttpRequests(authz -> {
-                authz.requestMatchers("/api/auth/**").permitAll();
+                authz.requestMatchers("/api/auth/**", "/ws/**").permitAll();
                 authz.anyRequest().authenticated();
                 System.out.println("SECURITY CONFIG: Authorization rules configured - /api/auth/** permitted, others authenticated");
             })
