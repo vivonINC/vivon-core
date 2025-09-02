@@ -44,7 +44,8 @@ public class SecurityConfig {
             })
             .authorizeHttpRequests(authz -> {
                 authz.requestMatchers(        "/", 
-        "/health", 
+        "/health",
+        "/error",
         "/actuator/health",
         "/api/auth/**", 
         "/ws/**").permitAll();
