@@ -31,34 +31,26 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        System.out.println("SECURITY CONFIG: Configuring security filter chain");
-        
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
-            .csrf(csrf -> {
-                csrf.disable();
-                System.out.println("SECURITY CONFIG: CSRF disabled");
-            })
-            .sessionManagement(session -> {
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                System.out.println("SECURITY CONFIG: Session management set to stateless");
-            })
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> {
-                authz.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(        "/", 
-        "/health",
-        "/error",
-        "/actuator/health",
-        "/api/auth/**", 
-        "/ws/**").permitAll();
+                // CORS preflight requests
+                authz.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+                // Public endpoints
+                authz.requestMatchers("/", "/health", "/error", "/actuator/health").permitAll();
+                // Auth endpoints
+                authz.requestMatchers("/api/auth/**").permitAll();
+                // WebSocket
+                authz.requestMatchers("/ws/**").permitAll();
+                // Everything else requires authentication
                 authz.anyRequest().authenticated();
-                System.out.println("SECURITY CONFIG: Authorization rules configured - /api/auth/** permitted, others authenticated");
             })
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .httpBasic(httpBasic -> httpBasic.disable())
             .formLogin(form -> form.disable());
 
-        System.out.println("SECURITY CONFIG: Filter chain built successfully");
         return http.build();
     }
 

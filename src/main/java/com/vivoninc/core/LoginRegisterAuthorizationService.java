@@ -146,15 +146,25 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getRequestURI();
-        boolean isAuthPath = path.startsWith("/api/auth/");
-        boolean isOptions = "OPTIONS".equalsIgnoreCase(request.getMethod());
-        boolean shouldSkip = isAuthPath || isOptions;
-        System.out.println("Request path: " + path + ", method: " + request.getMethod() + ", shouldNotFilter: " + shouldSkip);
-        return shouldSkip;
+@Override
+protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    String path = request.getRequestURI();
+    String method = request.getMethod();
+    
+    // Always skip OPTIONS requests (CORS preflight)
+    if ("OPTIONS".equalsIgnoreCase(method)) {
+        System.out.println("Skipping OPTIONS request: " + path);
+        return true;
     }
+    
+    // Skip auth paths
+    boolean isAuthPath = path.startsWith("/api/auth/");
+    boolean isPublicPath = path.equals("/") || path.equals("/health") || path.equals("/error");
+    
+    boolean shouldSkip = isAuthPath || isPublicPath;
+    System.out.println("Request path: " + path + ", method: " + method + ", shouldNotFilter: " + shouldSkip);
+    return shouldSkip;
+}
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

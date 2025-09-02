@@ -9,29 +9,26 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class CorsConfig {
-
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfigurationSource().getCorsConfiguration(null));
-        return new CorsFilter(source);
-    }
-
     
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
+        // Allow specific origins
         configuration.addAllowedOrigin("https://vivon-app.onrender.com");
         configuration.addAllowedOrigin("http://localhost:5173"); 
         configuration.addAllowedOrigin("http://localhost:3000"); 
         
-        configuration.addAllowedMethod("*"); // Allow all methods
+        // Allow all methods
+        configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
         
+        // Important: Set max age for preflight cache
+        configuration.setMaxAge(3600L);
+        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Apply to all paths
+        source.registerCorsConfiguration("/**", configuration);
         
         return source;
     }
