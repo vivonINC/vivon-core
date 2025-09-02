@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: vivon-core
-    env: java
-    runtime: java17  # or java11, java21, etc.
-    buildCommand: chmod +x ./mvnw && ./mvnw clean package -DskipTests
-    startCommand: java -jar target/*.jar
