@@ -56,8 +56,7 @@ public class SecurityConfig {
             })
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .httpBasic(httpBasic -> httpBasic.disable())
-            .formLogin(form -> form.disable())
-            .anonymous(anonymous -> anonymous.disable()); // Try disabling anonymous authentication
+            .formLogin(form -> form.disable());
 
         System.out.println("SECURITY CONFIG: Filter chain built successfully");
         return http.build();
