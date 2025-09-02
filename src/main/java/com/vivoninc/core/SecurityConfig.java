@@ -31,27 +31,32 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        return http
+            // CORS MUST be configured FIRST - this is critical
             .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authz -> {
-                // CORS preflight requests
-                authz.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+            .authorizeHttpRequests(authz -> authz
+                // CORS preflight requests - MUST be first and most permissive
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // Public endpoints
-                authz.requestMatchers("/", "/health", "/error", "/actuator/health").permitAll();
-                // Auth endpoints
-                authz.requestMatchers("/api/auth/**").permitAll();
+                .requestMatchers("/", "/health", "/error").permitAll()
+                .requestMatchers("/actuator/**").permitAll()
+                // Auth endpoints - these should be accessible without authentication
+                .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auth/**").permitAll()
                 // WebSocket
-                authz.requestMatchers("/ws/**").permitAll();
+                .requestMatchers("/ws/**").permitAll()
+                // Test endpoint (remove after testing)
+                .requestMatchers("/api/test").permitAll()
                 // Everything else requires authentication
-                authz.anyRequest().authenticated();
-            })
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .anyRequest().authenticated()
+            )
+            // Disable form login and HTTP basic
             .httpBasic(httpBasic -> httpBasic.disable())
-            .formLogin(form -> form.disable());
-
-        return http.build();
+            .formLogin(form -> form.disable())
+            // Add JWT filter AFTER all the CORS and public endpoint handling
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
-
 }

@@ -1,5 +1,6 @@
 package com.vivoninc.core;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.Collections;
@@ -146,32 +147,41 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
-@Override
-protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-    String path = request.getRequestURI();
-    String method = request.getMethod();
-    
-    // Always skip OPTIONS requests (CORS preflight)
-    if ("OPTIONS".equalsIgnoreCase(method)) {
-        System.out.println("Skipping OPTIONS request: " + path);
-        return true;
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        String method = request.getMethod();
+        
+        // CRITICAL: Always skip OPTIONS requests (CORS preflight) - must be first
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            System.out.println("JWT Filter - Skipping OPTIONS request: " + path);
+            return true;
+        }
+        
+        // Skip public endpoints
+        boolean isAuthPath = path.startsWith("/api/auth/");
+        boolean isPublicPath = path.equals("/") || path.equals("/health") || path.equals("/error");
+        boolean isActuatorPath = path.startsWith("/actuator/");
+        boolean isWebSocketPath = path.startsWith("/ws/");
+        
+        boolean shouldSkip = isAuthPath || isPublicPath || isActuatorPath || isWebSocketPath;
+        
+        System.out.println("JWT Filter - Request: " + method + " " + path + 
+                         ", shouldNotFilter: " + shouldSkip);
+        
+        return shouldSkip;
     }
-    
-    // Skip auth paths
-    boolean isAuthPath = path.startsWith("/api/auth/");
-    boolean isPublicPath = path.equals("/") || path.equals("/health") || path.equals("/error");
-    
-    boolean shouldSkip = isAuthPath || isPublicPath;
-    System.out.println("Request path: " + path + ", method: " + method + ", shouldNotFilter: " + shouldSkip);
-    return shouldSkip;
-}
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain)
-            throws ServletException, java.io.IOException {
+            throws ServletException, IOException {
 
-        System.out.println("ERROR: doFilterInternal called for: " + request.getRequestURI() + " (this should NOT happen for api/auth/login)");
+        String path = request.getRequestURI();
+        String method = request.getMethod();
+        
+        // This should only be called for protected endpoints
+        System.out.println("JWT Filter - Processing protected endpoint: " + method + " " + path);
         
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -184,10 +194,14 @@ protected boolean shouldNotFilter(HttpServletRequest request) throws ServletExce
                         userId, null, Collections.emptyList());
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
+                System.out.println("JWT Filter - Successfully authenticated user: " + userId);
             } catch (JwtException e) {
                 // Invalid token; optionally log
-                System.out.println("Invalid JWT token: " + e.getMessage());
+                System.out.println("JWT Filter - Invalid JWT token: " + e.getMessage());
+                // Don't set authentication, let Spring Security handle the 401
             }
+        } else {
+            System.out.println("JWT Filter - No valid Authorization header found");
         }
 
         filterChain.doFilter(request, response);
