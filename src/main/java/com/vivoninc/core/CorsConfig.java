@@ -13,26 +13,16 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Allow your frontend domain
-        configuration.addAllowedOrigin("https://your-frontend-name.onrender.com");
-        // For local development
-        configuration.addAllowedOrigin("http://localhost:5173"); // Vite default port
-        configuration.addAllowedOrigin("http://localhost:3000"); // Common React port
+        configuration.addAllowedOrigin("https://vivon-app.onrender.com");
+        configuration.addAllowedOrigin("http://localhost:5173"); 
+        configuration.addAllowedOrigin("http://localhost:3000"); 
         
-        // Allow specific methods
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
-        configuration.addAllowedMethod("PUT");
-        configuration.addAllowedMethod("DELETE");
-        configuration.addAllowedMethod("OPTIONS");
-        
-        // Allow specific headers
+        configuration.addAllowedMethod("*"); // Allow all methods
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
-        source.registerCorsConfiguration("/auth/**", configuration);
+        source.registerCorsConfiguration("/**", configuration); // Apply to all paths
         
         return source;
     }
