@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vivoninc.DTOs.LoginRequest;
 import com.vivoninc.DTOs.*;
 import com.vivoninc.core.LoginRegisterAuthorizationService;
 
@@ -23,6 +23,17 @@ public class LoginAuthorization {
 
     @Autowired //Not good
     private LoginRegisterAuthorizationService authService; 
+
+    // Add this method to handle OPTIONS requests explicitly
+    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> handleOptions() {
+        return ResponseEntity.ok().build();
+    }
+    
+    @RequestMapping(value = "/register", method = RequestMethod.OPTIONS)  
+    public ResponseEntity<?> handleRegisterOptions() {
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/register")
     public String register(@RequestBody Registration request) {
