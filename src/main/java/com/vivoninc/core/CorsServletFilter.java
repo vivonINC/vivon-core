@@ -15,7 +15,7 @@ public class CorsServletFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        System.out.println("CORS Servlet Filter initialized");
+        System.out.println("CORS Servlet Filter initialized - this should appear in logs");
     }
 
     @Override
@@ -31,11 +31,12 @@ public class CorsServletFilter implements Filter {
         
         System.out.println("CORS Servlet Filter - Processing: " + method + " " + uri + " from origin: " + origin);
         
-        // Set CORS headers for all requests
+        // Set CORS headers for all requests from allowed origins
         if (origin != null && (
             origin.equals("https://vivon-app.onrender.com") || 
             origin.equals("http://localhost:5173") || 
-            origin.equals("http://localhost:3000")
+            origin.equals("http://localhost:3000") ||
+            origin.equals("http://localhost:8080")
         )) {
             response.setHeader("Access-Control-Allow-Origin", origin);
             response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -43,13 +44,15 @@ public class CorsServletFilter implements Filter {
             response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Requested-With, accept, Origin, Access-Control-Request-Method, Access-Control-Request-Headers");
             response.setHeader("Access-Control-Expose-Headers", "Authorization, Content-Type");
             response.setHeader("Access-Control-Max-Age", "3600");
+            
+            System.out.println("CORS Servlet Filter - Added CORS headers for origin: " + origin);
         }
         
         // Handle OPTIONS requests immediately - don't let them go to Spring Security
         if ("OPTIONS".equalsIgnoreCase(method)) {
             System.out.println("CORS Servlet Filter - Handling OPTIONS request directly: " + uri);
             response.setStatus(HttpServletResponse.SC_OK);
-            return; // Don't continue the filter chain
+            return; // Don't continue the filter chain - this is key!
         }
         
         // Continue with the filter chain for non-OPTIONS requests
