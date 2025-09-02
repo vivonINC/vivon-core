@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/messages")
-@CrossOrigin(origins = "*") //Not needed?
 public class MessageController {
     private MessageDAO messageDAO;
 

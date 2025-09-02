@@ -9,15 +9,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
+    private final CorsConfigurationSource corsConfigurationSource;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtFilter, CorsConfigurationSource corsConfigSrc) {
         this.jwtFilter = jwtFilter;
+        this.corsConfigurationSource = corsConfigSrc;
     }
 
     @Bean
@@ -30,6 +33,7 @@ public class SecurityConfig {
         System.out.println("SECURITY CONFIG: Configuring security filter chain");
         
         http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .csrf(csrf -> {
                 csrf.disable();
                 System.out.println("SECURITY CONFIG: CSRF disabled");
@@ -51,4 +55,5 @@ public class SecurityConfig {
         System.out.println("SECURITY CONFIG: Filter chain built successfully");
         return http.build();
     }
+
 }
