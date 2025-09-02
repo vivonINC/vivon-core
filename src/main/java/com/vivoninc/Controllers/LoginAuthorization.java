@@ -24,20 +24,11 @@ public class LoginAuthorization {
     @Autowired //Not good
     private LoginRegisterAuthorizationService authService; 
 
-    // Add this method to handle OPTIONS requests explicitly
-    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> handleOptions() {
-        return ResponseEntity.ok().build();
-    }
-    
-    @RequestMapping(value = "/register", method = RequestMethod.OPTIONS)  
-    public ResponseEntity<?> handleRegisterOptions() {
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/register")
     public String register(@RequestBody Registration request) {
+        System.out.println("Register request: " + request);
         String result = authService.register(request.getUsername(), request.getEmail(), request.getPassword());
+        System.out.println("result: " + result);
         return result;
     }
 
