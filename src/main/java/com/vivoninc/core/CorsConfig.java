@@ -1,5 +1,7 @@
 package com.vivoninc.core;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -14,17 +16,21 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Allow specific origins
-        configuration.addAllowedOrigin("https://vivon-app.onrender.com");
-        configuration.addAllowedOrigin("http://localhost:5173"); 
-        configuration.addAllowedOrigin("http://localhost:3000"); 
+        configuration.setAllowedOrigins(
+            List.of("https://vivon-app.onrender.com", 
+                    "http://localhost:5173", 
+                    "http://localhost:3000")
+        );
         
-        // Allow all methods
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedHeader("*");
+        configuration.setAllowedMethods(
+            List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD")
+        );
+        
+        configuration.setAllowedHeaders(
+            List.of("*")
+        );
+        
         configuration.setAllowCredentials(true);
-        
-        // Important: Set max age for preflight cache
         configuration.setMaxAge(3600L);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
