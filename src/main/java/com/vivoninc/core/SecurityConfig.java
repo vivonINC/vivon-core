@@ -2,7 +2,6 @@ package com.vivoninc.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,11 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -32,30 +26,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*")); // Allow all origins for testing
-        configuration.setAllowedMethods(Arrays.asList("*")); // Allow all methods
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
-        
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        
-        System.out.println("SECURITY CONFIG: CORS configuration created with allow-all policy");
-        return source;
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        System.out.println("SECURITY CONFIG: Configuring security filter chain");
+        System.out.println("SECURITY CONFIG: Configuring security filter chain - CORS handled by servlet filter");
         
         return http
-            .cors(cors -> {
-                cors.configurationSource(corsConfigurationSource());
-                System.out.println("SECURITY CONFIG: CORS enabled with configuration source");
-            })
+            .cors(cors -> cors.disable()) // CORS handled by our servlet filter
             .csrf(csrf -> {
                 csrf.disable();
                 System.out.println("SECURITY CONFIG: CSRF disabled");
@@ -66,15 +41,11 @@ public class SecurityConfig {
             })
             .authorizeHttpRequests(authz -> {
                 authz
-                    // CORS preflight requests - HIGHEST priority
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     // Public endpoints
                     .requestMatchers("/", "/health", "/error").permitAll()
                     .requestMatchers("/actuator/**").permitAll()
                     // Auth endpoints
-                    .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/auth/**").permitAll()
-                    .requestMatchers(HttpMethod.OPTIONS, "/api/auth/**").permitAll()
+                    .requestMatchers("/api/auth/**").permitAll()
                     // Test endpoint
                     .requestMatchers("/api/test").permitAll()
                     // WebSocket
@@ -82,7 +53,7 @@ public class SecurityConfig {
                     // Everything else requires authentication
                     .anyRequest().authenticated();
                 
-                System.out.println("SECURITY CONFIG: Authorization rules configured - /api/auth/** permitted, others authenticated");
+                System.out.println("SECURITY CONFIG: Authorization rules configured");
             })
             .httpBasic(httpBasic -> httpBasic.disable())
             .formLogin(form -> form.disable())
