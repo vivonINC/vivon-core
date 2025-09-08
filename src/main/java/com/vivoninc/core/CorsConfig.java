@@ -5,11 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.core.Ordered;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.web.filter.CorsFilter;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 @Configuration
@@ -21,7 +17,7 @@ public class CorsConfig {
         
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Allow specific origins (exact match for Render; add more if needed)
+        // Exact origins - no wildcards with credentials=true
         configuration.setAllowedOrigins(Arrays.asList(
             "https://vivon-app.onrender.com",
             "http://localhost:5173",
@@ -29,36 +25,32 @@ public class CorsConfig {
             "http://localhost:8080"
         ));
         
-        // Allow credentials (matches your frontend setup)
         configuration.setAllowCredentials(true);
         
-        // Allow all headers
-        configuration.addAllowedHeader("*");
+        // Explicitly allow all common headers, including Content-Type for JSON preflights
+        configuration.addAllowedHeader("*");  // This should work, but add explicit if issues
+        // configuration.addAllowedHeader("Content-Type");  // Uncomment for exact match if * fails
         
-        // Allow all methods, including OPTIONS for preflights
+        // Explicit methods - ensure POST and OPTIONS are first
         configuration.setAllowedMethods(Arrays.asList(
-            "GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"
+            "OPTIONS", "GET", "POST", "PUT", "DELETE", "HEAD", "PATCH"
         ));
         
-        // Expose headers (add Authorization for JWT)
-        configuration.setExposedHeaders(Arrays.asList(
-            "Authorization", "Content-Type"
-        ));
+        // Expose for frontend access
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
         
-        // Max age for preflight caching
         configuration.setMaxAge(3600L);
         
+        // Debug logs
         System.out.println("CORS Allowed Origins: " + configuration.getAllowedOrigins());
         System.out.println("CORS Allowed Methods: " + configuration.getAllowedMethods());
         System.out.println("CORS Allowed Headers: " + configuration.getAllowedHeaders());
         System.out.println("CORS Allow Credentials: " + configuration.getAllowCredentials());
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);  // Applies to all paths, including /api/auth/**
         
-        System.out.println("CORS Configuration registered for pattern: /**");
+        System.out.println("CORS Configuration registered for /**");
         return source;
     }
-
-    // REMOVE the entire @Bean for FilterRegistrationBean<CorsFilter> - let Spring Security handle it
 }
