@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-@Order(Ordered.HIGHEST_PRECEDENCE - 1) // Run before CORS filter
+@Order(Ordered.LOWEST_PRECEDENCE) // Run before CORS filter
 public class RequestLoggingFilter implements Filter {
 
     @Override

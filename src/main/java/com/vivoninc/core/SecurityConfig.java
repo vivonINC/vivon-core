@@ -2,6 +2,7 @@ package com.vivoninc.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,7 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
-    private final CorsConfigurationSource corsConfigurationSource;
+    private final CorsConfigurationSource corsConfigurationSource;  // Inject it
 
     public SecurityConfig(JwtAuthenticationFilter jwtFilter, CorsConfigurationSource corsConfigurationSource) {
         this.jwtFilter = jwtFilter;
@@ -33,10 +34,7 @@ public class SecurityConfig {
         System.out.println("SECURITY CONFIG: Configuring security filter chain with CORS enabled");
         
         return http
-            .cors(cors -> {
-                cors.configurationSource(corsConfigurationSource);
-                System.out.println("SECURITY CONFIG: CORS enabled with custom configuration");
-            })
+            .cors(cors -> cors.configurationSource(corsConfigurationSource))  // Use your source explicitly
             .csrf(csrf -> {
                 csrf.disable();
                 System.out.println("SECURITY CONFIG: CSRF disabled");
@@ -47,13 +45,14 @@ public class SecurityConfig {
             })
             .authorizeHttpRequests(authz -> {
                 authz
-                    // Public endpoints - be very explicit
+                    // Public endpoints - be very explicit, including OPTIONS for preflights
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Explicitly allow all OPTIONS
                     .requestMatchers("/").permitAll()
                     .requestMatchers("/health", "/error", "/favicon.ico").permitAll()
                     .requestMatchers("/actuator/**").permitAll()
-                    // Auth endpoints - be explicit about methods and paths
+                    // Auth endpoints - permit all methods
                     .requestMatchers("/api/auth/**").permitAll()
-                    // Test endpoint
+                    // Test/debug endpoints
                     .requestMatchers("/api/test").permitAll()
                     .requestMatchers("/debug/**").permitAll()
                     // WebSocket

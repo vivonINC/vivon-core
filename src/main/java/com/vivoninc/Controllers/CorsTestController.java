@@ -8,12 +8,6 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(
-    origins = {"https://vivon-app.onrender.com", "http://localhost:5173", "http://localhost:3000"},
-    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS},
-    allowedHeaders = "*",
-    allowCredentials = "true"
-)
 public class CorsTestController {
     
     @GetMapping("/test")
