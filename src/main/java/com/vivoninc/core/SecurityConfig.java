@@ -1,4 +1,4 @@
-package com.vivoninc.core;
+/**package com.vivoninc.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -93,4 +93,4 @@ public class SecurityConfig {
             
             .build();
     }
-}
+}**/
