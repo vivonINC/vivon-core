@@ -35,11 +35,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Use patterns for flexibility (e.g., allows https://vivon-app.onrender.com with any port/subdomain)
-        configuration.setAllowedOriginPatterns(List.of("https://vivon-app.onrender.com", "http://localhost:*"));
+        // Exact origins for security; add localhost for dev
+        configuration.setAllowedOrigins(List.of(
+            "https://vivon-app.onrender.com",
+            "http://localhost:3000"  // Adjust port if different
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);  // If you need cookies/auth headers
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "*"));  // Covers preflight headers
+        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -52,42 +55,42 @@ public class SecurityConfig {
         System.out.println("SECURITY CONFIG: Building security filter chain...");
         
         return http
-            // CORS must come BEFORE authorizeHttpRequests to process preflights early
+            // CORS FIRST: Processes preflights before security checks
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             
-            // Disable CSRF
+            // Disable CSRF (stateless API)
             .csrf(csrf -> csrf.disable())
             
-            // Configure sessions
+            // Stateless sessions
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             
-            // Authorization rules
+            // Authorization: OPTIONS FIRST to permit all preflights
             .authorizeHttpRequests(auth -> {
                 auth
-                    // Permit ALL OPTIONS (preflight) without auth - this is crucial
+                    // Permit ALL OPTIONS preflights globally (no auth needed)
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     
-                    // Public endpoints
+                    // Public static paths
                     .requestMatchers("/", "/health", "/error", "/favicon.ico").permitAll()
                     
-                    // API endpoints that don't need auth
+                    // Public API paths (includes /api/auth/register POST)
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/test").permitAll()
                     .requestMatchers("/debug/**").permitAll()
                     .requestMatchers("/actuator/**").permitAll()
                     .requestMatchers("/ws/**").permitAll()
                     
-                    // Everything else needs authentication
+                    // All else requires auth
                     .anyRequest().authenticated();
                     
-                System.out.println("SECURITY CONFIG: Authorization configured");
+                System.out.println("SECURITY CONFIG: Authorization configured - OPTIONS permitted");
             })
             
-            // Disable default auth methods
+            // Disable form/basic login
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable())
             
-            // Add our JWT filter
+            // JWT filter after CORS/Security
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             
             .build();
