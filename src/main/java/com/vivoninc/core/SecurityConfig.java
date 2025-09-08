@@ -9,15 +9,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
+    private final CorsConfigurationSource corsConfigurationSource;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtFilter, CorsConfigurationSource corsConfigurationSource) {
         this.jwtFilter = jwtFilter;
+        this.corsConfigurationSource = corsConfigurationSource;
     }
 
     @Bean
@@ -27,10 +30,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        System.out.println("SECURITY CONFIG: Configuring security filter chain - CORS handled by servlet filter");
+        System.out.println("SECURITY CONFIG: Configuring security filter chain with CORS enabled");
         
         return http
-            .cors(cors -> cors.disable()) // CORS handled by our servlet filter
+            .cors(cors -> {
+                cors.configurationSource(corsConfigurationSource);
+                System.out.println("SECURITY CONFIG: CORS enabled with custom configuration");
+            })
             .csrf(csrf -> {
                 csrf.disable();
                 System.out.println("SECURITY CONFIG: CSRF disabled");
@@ -46,12 +52,9 @@ public class SecurityConfig {
                     .requestMatchers("/health", "/error", "/favicon.ico").permitAll()
                     .requestMatchers("/actuator/**").permitAll()
                     // Auth endpoints - be explicit about methods and paths
-                    .requestMatchers("GET", "/api/auth/**").permitAll()
-                    .requestMatchers("POST", "/api/auth/**").permitAll()
-                    .requestMatchers("OPTIONS", "/api/auth/**").permitAll()
+                    .requestMatchers("/api/auth/**").permitAll()
                     // Test endpoint
-                    .requestMatchers("GET", "/api/test").permitAll()
-                    .requestMatchers("OPTIONS", "/api/test").permitAll()
+                    .requestMatchers("/api/test").permitAll()
                     // WebSocket
                     .requestMatchers("/ws/**").permitAll()
                     // Everything else requires authentication

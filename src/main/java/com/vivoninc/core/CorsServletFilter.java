@@ -1,4 +1,4 @@
-package com.vivoninc.core;
+/**package com.vivoninc.core;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,4 +70,4 @@ public class CorsServletFilter implements Filter {
     public void destroy() {
         System.out.println("CORS Servlet Filter destroyed");
     }
-}
+}**/
