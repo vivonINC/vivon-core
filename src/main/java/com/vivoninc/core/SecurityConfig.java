@@ -32,17 +32,13 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 
-    @Bean
+   @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Exact origins for security; add localhost for dev
-        configuration.setAllowedOrigins(List.of(
-            "https://vivon-app.onrender.com",
-            "http://localhost:3000"  // Adjust port if different
-        ));
+        configuration.setAllowedOriginPatterns(List.of("*"));  // Pattern for all origins
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "*"));  // Covers preflight headers
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(List.of("*"));  // Simplify to true wildcard
+        configuration.setAllowCredentials(false);  // Set false since register doesn't need credentials
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

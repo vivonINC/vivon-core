@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api")
+
 public class CorsTestController {
     
     @GetMapping("/test")
