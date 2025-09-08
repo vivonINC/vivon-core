@@ -15,6 +15,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -34,10 +35,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Arrays.asList("*")); // Allow all origins for now
-        configuration.setAllowedMethods(Arrays.asList("*")); // Allow all methods
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
-        configuration.setAllowCredentials(true);
+        // Use patterns for flexibility (e.g., allows https://vivon-app.onrender.com with any port/subdomain)
+        configuration.setAllowedOriginPatterns(List.of("https://vivon-app.onrender.com", "http://localhost:*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);  // If you need cookies/auth headers
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -50,7 +52,7 @@ public class SecurityConfig {
         System.out.println("SECURITY CONFIG: Building security filter chain...");
         
         return http
-            // Enable CORS first - this is crucial
+            // CORS must come BEFORE authorizeHttpRequests to process preflights early
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             
             // Disable CSRF
@@ -59,19 +61,14 @@ public class SecurityConfig {
             // Configure sessions
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             
-            // Configure authorization - OPTIONS MUST BE FIRST
+            // Authorization rules
             .authorizeHttpRequests(auth -> {
                 auth
-                    // CRITICAL: Allow ALL OPTIONS requests without any authentication
-                    .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                    // Permit ALL OPTIONS (preflight) without auth - this is crucial
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     
                     // Public endpoints
-                    .requestMatchers(
-                        "/", 
-                        "/health", 
-                        "/error", 
-                        "/favicon.ico"
-                    ).permitAll()
+                    .requestMatchers("/", "/health", "/error", "/favicon.ico").permitAll()
                     
                     // API endpoints that don't need auth
                     .requestMatchers("/api/auth/**").permitAll()
