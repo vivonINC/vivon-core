@@ -2,7 +2,7 @@ package com.vivoninc.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpMethod;  // Add this import if missing
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,7 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
-    private final CorsConfigurationSource corsConfigurationSource;  // Inject it
+    private final CorsConfigurationSource corsConfigurationSource;
 
     public SecurityConfig(JwtAuthenticationFilter jwtFilter, CorsConfigurationSource corsConfigurationSource) {
         this.jwtFilter = jwtFilter;
@@ -34,33 +34,25 @@ public class SecurityConfig {
         System.out.println("SECURITY CONFIG: Configuring security filter chain with CORS enabled");
         
         return http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource))  // Use your source explicitly
-            .csrf(csrf -> {
-                csrf.disable();
-                System.out.println("SECURITY CONFIG: CSRF disabled");
-            })
-            .sessionManagement(session -> {
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                System.out.println("SECURITY CONFIG: Session management set to stateless");
-            })
+            .cors(cors -> cors.configurationSource(corsConfigurationSource))  // Enables CorsFilter early
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> {
                 authz
-                    // Public endpoints - be very explicit, including OPTIONS for preflights
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Explicitly allow all OPTIONS
+                    // CRITICAL: Permit ALL OPTIONS preflights FIRST (bypasses auth/JWT)
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    // Then public endpoints
                     .requestMatchers("/").permitAll()
                     .requestMatchers("/health", "/error", "/favicon.ico").permitAll()
                     .requestMatchers("/actuator/**").permitAll()
-                    // Auth endpoints - permit all methods
-                    .requestMatchers("/api/auth/**").permitAll()
-                    // Test/debug endpoints
+                    .requestMatchers("/api/auth/**").permitAll()  // Covers POST/GET for auth
                     .requestMatchers("/api/test").permitAll()
                     .requestMatchers("/debug/**").permitAll()
-                    // WebSocket
                     .requestMatchers("/ws/**").permitAll()
-                    // Everything else requires authentication
+                    // Protected: everything else authenticated
                     .anyRequest().authenticated();
                 
-                System.out.println("SECURITY CONFIG: Authorization rules configured");
+                System.out.println("SECURITY CONFIG: Authorization rules configured - OPTIONS preflights permitted");
             })
             .httpBasic(httpBasic -> httpBasic.disable())
             .formLogin(form -> form.disable())
