@@ -1,4 +1,20 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "mysql-68489d1-josef-43a0.l.aivencloud.com",
+            "port": 17967,
+            "driver": "MySQL",
+            "name": "Vivon Aiven Connection",
+            "username": "avnadmin",
+            "database": "defaultdb"
+        }
+    ]
 }
