@@ -55,6 +55,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/auth/**").permitAll()
                     // Test endpoint
                     .requestMatchers("/api/test").permitAll()
+                    .requestMatchers("/debug/**").permitAll()
                     // WebSocket
                     .requestMatchers("/ws/**").permitAll()
                     // Everything else requires authentication
