@@ -152,8 +152,12 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
         
-        System.out.println("JWT Filter - shouldNotFilter check: " + method + " " + path);
+        System.out.println("Request path: " + path + ", shouldNotFilter: " + getShouldSkip(path, method));
         
+        return getShouldSkip(path, method);
+    }
+    
+    private boolean getShouldSkip(String path, String method) {
         // CRITICAL: Always skip OPTIONS requests (CORS preflight) - must be first
         if ("OPTIONS".equalsIgnoreCase(method)) {
             System.out.println("JWT Filter - Skipping OPTIONS request: " + path);
@@ -190,6 +194,12 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
             return true;
         }
         
+        // Skip debug paths
+        if (path.startsWith("/debug")) {
+            System.out.println("JWT Filter - Skipping debug path: " + path);
+            return true;
+        }
+        
         // Skip websocket paths
         if (path.startsWith("/ws")) {
             System.out.println("JWT Filter - Skipping websocket path: " + path);
@@ -208,19 +218,15 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
         
-        System.out.println("JWT Filter - doFilterInternal: " + method + " " + path);
-        
-        // This should NEVER happen for paths that shouldNotFilter returned true for
-        if (path != null && (
-            path.equals("/") || 
-            path.startsWith("/api/auth") || 
-            path.equals("/api/test") ||
-            path.equals("/health") ||
-            path.equals("/error")
-        )) {
-            System.err.println("ERROR: JWT Filter processing path that should be skipped: " + path);
-            System.err.println("This indicates a configuration problem!");
+        // Double-check: This should NEVER be called for paths we're supposed to skip
+        if (getShouldSkip(path, method)) {
+            System.err.println("ERROR: doFilterInternal called for: " + path + " (this should NOT happen for skipped paths)");
+            // Still continue to prevent blocking
+            filterChain.doFilter(request, response);
+            return;
         }
+        
+        System.out.println("JWT Filter - Processing authenticated request: " + method + " " + path);
         
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
