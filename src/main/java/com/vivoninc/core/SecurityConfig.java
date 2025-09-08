@@ -2,7 +2,7 @@ package com.vivoninc.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;  // Add this import if missing
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,18 +10,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
-    private final CorsConfigurationSource corsConfigurationSource;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtFilter, CorsConfigurationSource corsConfigurationSource) {
+    public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
-        this.corsConfigurationSource = corsConfigurationSource;
     }
 
     @Bean
@@ -31,32 +28,41 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        System.out.println("SECURITY CONFIG: Configuring security filter chain with CORS enabled");
+        System.out.println("SECURITY CONFIG: Configuring security filter chain");
         
-        return http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource))  // Enables CorsFilter early
+        http
+            // Disable CSRF for API
             .csrf(csrf -> csrf.disable())
+            
+            // Configure session management
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            
+            // Configure authorization
             .authorizeHttpRequests(authz -> {
                 authz
-                    // CRITICAL: Permit ALL OPTIONS preflights FIRST (bypasses auth/JWT)
+                    // Allow all OPTIONS requests (preflight)
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    // Then public endpoints
-                    .requestMatchers("/").permitAll()
-                    .requestMatchers("/health", "/error", "/favicon.ico").permitAll()
+                    // Allow public paths
+                    .requestMatchers("/", "/health", "/error", "/favicon.ico").permitAll()
                     .requestMatchers("/actuator/**").permitAll()
-                    .requestMatchers("/api/auth/**").permitAll()  // Covers POST/GET for auth
+                    .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/test").permitAll()
                     .requestMatchers("/debug/**").permitAll()
                     .requestMatchers("/ws/**").permitAll()
-                    // Protected: everything else authenticated
+                    // All other requests need authentication
                     .anyRequest().authenticated();
                 
-                System.out.println("SECURITY CONFIG: Authorization rules configured - OPTIONS preflights permitted");
+                System.out.println("SECURITY CONFIG: Authorization rules configured");
             })
-            .httpBasic(httpBasic -> httpBasic.disable())
+            
+            // Disable form login and basic auth
             .formLogin(form -> form.disable())
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
+            .httpBasic(basic -> basic.disable())
+            
+            // Add JWT filter
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        
+        System.out.println("SECURITY CONFIG: Filter chain configured successfully");
+        return http.build();
     }
 }

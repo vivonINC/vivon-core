@@ -152,9 +152,10 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
         
-        System.out.println("Request path: " + path + ", shouldNotFilter: " + getShouldSkip(path, method));
+        boolean shouldSkip = getShouldSkip(path, method);
+        System.out.println("Request path: " + path + ", method: " + method + ", shouldNotFilter: " + shouldSkip);
         
-        return getShouldSkip(path, method);
+        return shouldSkip;
     }
     
     private boolean getShouldSkip(String path, String method) {

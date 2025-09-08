@@ -2,44 +2,46 @@ package com.vivoninc.Controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Map;
 import java.util.HashMap;
 
 @RestController
+@RequestMapping("/debug")
 public class DebugController {
     
-    @GetMapping("/debug/cors")
-    public ResponseEntity<?> debugCors(HttpServletRequest request) {
-        System.out.println("=== DEBUG CORS ENDPOINT CALLED ===");
-        
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Debug CORS endpoint reached");
-        response.put("method", request.getMethod());
-        response.put("uri", request.getRequestURI());
-        response.put("origin", request.getHeader("Origin"));
-        response.put("timestamp", System.currentTimeMillis());
-        
-        // Log all headers
-        Map<String, String> headers = new HashMap<>();
-        request.getHeaderNames().asIterator().forEachRemaining(headerName -> 
-            headers.put(headerName, request.getHeader(headerName))
-        );
-        response.put("headers", headers);
-        
-        System.out.println("Debug response: " + response);
+    @GetMapping("/cors")
+    public ResponseEntity<?> testCors() {
+        System.out.println("=== DEBUG: CORS test endpoint called ===");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "CORS is working!");
+        response.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        response.put("origin", "backend");
         return ResponseEntity.ok(response);
     }
     
-    // Explicitly handle OPTIONS
-    @RequestMapping(value = "/debug/cors", method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> debugCorsOptions(HttpServletRequest request) {
-        System.out.println("=== DEBUG CORS OPTIONS CALLED ===");
-        System.out.println("Origin: " + request.getHeader("Origin"));
-        System.out.println("Access-Control-Request-Method: " + request.getHeader("Access-Control-Request-Method"));
-        System.out.println("Access-Control-Request-Headers: " + request.getHeader("Access-Control-Request-Headers"));
+    // Explicitly handle OPTIONS for debugging
+    @RequestMapping(value = "/cors", method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> handleCorsOptions() {
+        System.out.println("=== DEBUG: OPTIONS request received for /debug/cors ===");
+        return ResponseEntity.ok()
+            .header("Access-Control-Allow-Origin", "https://vivon-app.onrender.com")
+            .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            .header("Access-Control-Allow-Headers", "*")
+            .header("Access-Control-Allow-Credentials", "true")
+            .build();
+    }
+    
+    @PostMapping("/auth-test")
+    public ResponseEntity<?> testAuthEndpoint(@RequestBody(required = false) Map<String, Object> body) {
+        System.out.println("=== DEBUG: Auth test endpoint called ===");
+        System.out.println("Request body: " + body);
         
-        return ResponseEntity.ok().build();
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Auth endpoint working");
+        response.put("receivedData", body);
+        response.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        
+        return ResponseEntity.ok(response);
     }
 }
