@@ -7,6 +7,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class CorsConfig {
@@ -17,7 +18,7 @@ public class CorsConfig {
         
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Exact origins - no wildcards with credentials=true
+        // Exact origins
         configuration.setAllowedOrigins(Arrays.asList(
             "https://vivon-app.onrender.com",
             "http://localhost:5173",
@@ -27,28 +28,30 @@ public class CorsConfig {
         
         configuration.setAllowCredentials(true);
         
-        // Explicitly allow all common headers, including Content-Type for JSON preflights
-        configuration.addAllowedHeader("*");  // This should work, but add explicit if issues
-        // configuration.addAllowedHeader("Content-Type");  // Uncomment for exact match if * fails
+        // Explicit headers: Cover Content-Type for JSON preflights + Authorization for JWT
+        configuration.setAllowedHeaders(List.of(
+            "Content-Type",
+            "Authorization",
+            "Accept",
+            "X-Requested-With",
+            "Origin"
+        ));
         
-        // Explicit methods - ensure POST and OPTIONS are first
+        // Methods: OPTIONS first for preflights
         configuration.setAllowedMethods(Arrays.asList(
             "OPTIONS", "GET", "POST", "PUT", "DELETE", "HEAD", "PATCH"
         ));
         
-        // Expose for frontend access
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        
         configuration.setMaxAge(3600L);
         
-        // Debug logs
         System.out.println("CORS Allowed Origins: " + configuration.getAllowedOrigins());
         System.out.println("CORS Allowed Methods: " + configuration.getAllowedMethods());
         System.out.println("CORS Allowed Headers: " + configuration.getAllowedHeaders());
         System.out.println("CORS Allow Credentials: " + configuration.getAllowCredentials());
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);  // Applies to all paths, including /api/auth/**
+        source.registerCorsConfiguration("/**", configuration);
         
         System.out.println("CORS Configuration registered for /**");
         return source;
