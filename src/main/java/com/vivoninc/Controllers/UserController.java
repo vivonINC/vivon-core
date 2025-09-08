@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "https://vivon-app.onrender.com", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS}, allowCredentials = "false")
 public class UserController {
     private final UserDAO userDAO;
 

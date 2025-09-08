@@ -20,7 +20,6 @@ import com.vivoninc.core.LoginRegisterAuthorizationService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "https://vivon-app.onrender.com", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS}, allowCredentials = "false")
 public class LoginAuthorization {
 
     @Autowired //Not good

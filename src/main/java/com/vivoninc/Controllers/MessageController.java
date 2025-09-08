@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/messages")
-@CrossOrigin(origins = "https://vivon-app.onrender.com", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS}, allowCredentials = "false")
 public class MessageController {
     private MessageDAO messageDAO;
 
