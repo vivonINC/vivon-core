@@ -10,6 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -27,42 +32,67 @@ public class SecurityConfig {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Arrays.asList("*")); // Allow all origins for now
+        configuration.setAllowedMethods(Arrays.asList("*")); // Allow all methods
+        configuration.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        System.out.println("SECURITY CONFIG: Configuring security filter chain");
+        System.out.println("SECURITY CONFIG: Building security filter chain...");
         
-        http
-            // Disable CSRF for API
+        return http
+            // Enable CORS first - this is crucial
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            
+            // Disable CSRF
             .csrf(csrf -> csrf.disable())
             
-            // Configure session management
+            // Configure sessions
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             
-            // Configure authorization
-            .authorizeHttpRequests(authz -> {
-                authz
-                    // Allow all OPTIONS requests (preflight)
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    // Allow public paths
-                    .requestMatchers("/", "/health", "/error", "/favicon.ico").permitAll()
-                    .requestMatchers("/actuator/**").permitAll()
+            // Configure authorization - OPTIONS MUST BE FIRST
+            .authorizeHttpRequests(auth -> {
+                auth
+                    // CRITICAL: Allow ALL OPTIONS requests without any authentication
+                    .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                    
+                    // Public endpoints
+                    .requestMatchers(
+                        "/", 
+                        "/health", 
+                        "/error", 
+                        "/favicon.ico"
+                    ).permitAll()
+                    
+                    // API endpoints that don't need auth
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/test").permitAll()
                     .requestMatchers("/debug/**").permitAll()
+                    .requestMatchers("/actuator/**").permitAll()
                     .requestMatchers("/ws/**").permitAll()
-                    // All other requests need authentication
+                    
+                    // Everything else needs authentication
                     .anyRequest().authenticated();
-                
-                System.out.println("SECURITY CONFIG: Authorization rules configured");
+                    
+                System.out.println("SECURITY CONFIG: Authorization configured");
             })
             
-            // Disable form login and basic auth
+            // Disable default auth methods
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable())
             
-            // Add JWT filter
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        
-        System.out.println("SECURITY CONFIG: Filter chain configured successfully");
-        return http.build();
+            // Add our JWT filter
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+            
+            .build();
     }
 }
