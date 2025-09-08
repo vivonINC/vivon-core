@@ -29,7 +29,8 @@ public class CorsServletFilter implements Filter {
         String method = request.getMethod();
         String uri = request.getRequestURI();
         
-        System.out.println("CORS Servlet Filter - Processing: " + method + " " + uri + " from origin: " + origin);
+        System.out.println("=== CORS Filter START ===");
+        System.out.println("CORS Filter - Processing: " + method + " " + uri + " from origin: " + origin);
         
         // Set CORS headers for all requests from allowed origins
         if (origin != null && (
@@ -45,18 +46,23 @@ public class CorsServletFilter implements Filter {
             response.setHeader("Access-Control-Expose-Headers", "Authorization, Content-Type");
             response.setHeader("Access-Control-Max-Age", "3600");
             
-            System.out.println("CORS Servlet Filter - Added CORS headers for origin: " + origin);
+            System.out.println("CORS Filter - Added CORS headers for origin: " + origin);
+        } else {
+            System.out.println("CORS Filter - Origin not in allowed list or null: " + origin);
         }
         
         // Handle OPTIONS requests immediately - don't let them go to Spring Security
         if ("OPTIONS".equalsIgnoreCase(method)) {
-            System.out.println("CORS Servlet Filter - Handling OPTIONS request directly: " + uri);
+            System.out.println("CORS Filter - Handling OPTIONS request directly: " + uri);
+            System.out.println("CORS Filter - Sending 200 OK for OPTIONS, stopping filter chain");
             response.setStatus(HttpServletResponse.SC_OK);
+            System.out.println("=== CORS Filter END (OPTIONS) ===");
             return; // Don't continue the filter chain - this is key!
         }
         
         // Continue with the filter chain for non-OPTIONS requests
-        System.out.println("CORS Servlet Filter - Passing through: " + method + " " + uri);
+        System.out.println("CORS Filter - Passing through: " + method + " " + uri + " to next filter");
+        System.out.println("=== CORS Filter CONTINUE ===");
         chain.doFilter(req, res);
     }
 

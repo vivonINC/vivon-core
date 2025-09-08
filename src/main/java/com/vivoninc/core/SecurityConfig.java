@@ -41,13 +41,17 @@ public class SecurityConfig {
             })
             .authorizeHttpRequests(authz -> {
                 authz
-                    // Public endpoints
-                    .requestMatchers("/", "/health", "/error").permitAll()
+                    // Public endpoints - be very explicit
+                    .requestMatchers("/").permitAll()
+                    .requestMatchers("/health", "/error", "/favicon.ico").permitAll()
                     .requestMatchers("/actuator/**").permitAll()
-                    // Auth endpoints
-                    .requestMatchers("/api/auth/**").permitAll()
+                    // Auth endpoints - be explicit about methods and paths
+                    .requestMatchers("GET", "/api/auth/**").permitAll()
+                    .requestMatchers("POST", "/api/auth/**").permitAll()
+                    .requestMatchers("OPTIONS", "/api/auth/**").permitAll()
                     // Test endpoint
-                    .requestMatchers("/api/test").permitAll()
+                    .requestMatchers("GET", "/api/test").permitAll()
+                    .requestMatchers("OPTIONS", "/api/test").permitAll()
                     // WebSocket
                     .requestMatchers("/ws/**").permitAll()
                     // Everything else requires authentication

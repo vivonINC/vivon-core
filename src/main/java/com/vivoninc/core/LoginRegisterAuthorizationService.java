@@ -160,34 +160,39 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
             return true;
         }
         
-        // Skip specific paths - be very explicit
-        if (path.equals("/")) {
-            System.out.println("JWT Filter - Skipping root path");
+        // Skip root and common paths - be more flexible
+        if (path == null || path.equals("/") || path.isEmpty()) {
+            System.out.println("JWT Filter - Skipping root/empty path: " + path);
             return true;
         }
         
-        if (path.equals("/health") || path.equals("/error")) {
-            System.out.println("JWT Filter - Skipping health/error path");
+        // Skip health/error paths
+        if (path.equals("/health") || path.equals("/error") || path.equals("/favicon.ico")) {
+            System.out.println("JWT Filter - Skipping health/error/favicon path: " + path);
             return true;
         }
         
-        if (path.startsWith("/actuator/")) {
-            System.out.println("JWT Filter - Skipping actuator path");
+        // Skip actuator paths
+        if (path.startsWith("/actuator")) { // Remove trailing slash to be more flexible
+            System.out.println("JWT Filter - Skipping actuator path: " + path);
             return true;
         }
         
-        if (path.startsWith("/api/auth/")) {
+        // Skip auth paths - be more specific and flexible
+        if (path.startsWith("/api/auth")) { // Remove trailing slash
             System.out.println("JWT Filter - Skipping auth path: " + path);
             return true;
         }
         
+        // Skip test path
         if (path.equals("/api/test")) {
             System.out.println("JWT Filter - Skipping test path");
             return true;
         }
         
-        if (path.startsWith("/ws/")) {
-            System.out.println("JWT Filter - Skipping websocket path");
+        // Skip websocket paths
+        if (path.startsWith("/ws")) { // Remove trailing slash
+            System.out.println("JWT Filter - Skipping websocket path: " + path);
             return true;
         }
         
@@ -205,6 +210,12 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
         
         System.out.println("JWT Filter - Processing protected endpoint: " + method + " " + path);
         
+        // Additional safety check - this should not happen for auth paths
+        if (path != null && path.startsWith("/api/auth")) {
+            System.err.println("ERROR: JWT Filter processing auth path - this should be skipped!");
+            System.err.println("Path: " + path + ", Method: " + method);
+        }
+        
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
@@ -221,7 +232,7 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
                 System.out.println("JWT Filter - Invalid JWT token: " + e.getMessage());
             }
         } else {
-            System.out.println("JWT Filter - No valid Authorization header found");
+            System.out.println("JWT Filter - No valid Authorization header found for: " + path);
         }
 
         filterChain.doFilter(request, response);
