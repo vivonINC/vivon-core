@@ -267,8 +267,28 @@ public class MessageDAO {
         return rowsAffected > 0;
     }
 
-    public void send(Message message){
+    public Message send(Message message) {
         String sql = "INSERT INTO messages (conversation_id, sender_id, content, message_type, created_at) VALUES (?,?,?,?,?)";
-        jdbcTemplate.update(sql,message.getConversationID(), message.getSenderID(), message.getContent(), message.getType().toString(), message.getDateSent());
+        
+        // Use KeyHolder to get the generated ID
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, message.getConversationID());
+            ps.setString(2, message.getSenderID());
+            ps.setString(3, message.getContent());
+            ps.setString(4, message.getType().toString());
+            ps.setTimestamp(5, message.getDateSent());
+            return ps;
+        }, keyHolder);
+        
+        // Set the generated ID on the message object
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            message.setID(generatedId.intValue());
+        }
+        
+        return message; // Return the message with the ID set
     }
 }

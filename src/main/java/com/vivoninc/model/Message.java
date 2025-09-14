@@ -7,7 +7,7 @@ public class Message {
     private int conversationID;
     private String content;
         @JsonProperty("sender_id")
-    private int senderID;
+    private String senderID;
     @JsonProperty("created_at")
     private java.sql.Timestamp dateSent;
     private java.sql.Timestamp dateDeleted;
@@ -65,11 +65,11 @@ public class Message {
         this.conversationID = receiverID;
     }
 
-    public int getSenderID() {
+    public String getSenderID() {
         return senderID;
     }
 
-    public void setSenderID(int senderID) {
+    public void setSenderID(String senderID) {
         this.senderID = senderID;
     }
 
