@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.vivoninc.core.CoreApplicationTests" time="7.694" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.vivoninc.core.CoreApplicationTests" time="6.615" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -17,7 +17,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-21.0.5.11-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\josef\AppData\Local\Temp\surefire4076160881182972834\surefirebooter-20250914143852440_3.jar C:\Users\josef\AppData\Local\Temp\surefire4076160881182972834 2025-09-14T14-38-52_210-jvmRun1 surefire-20250914143852440_1tmp surefire_0-20250914143852440_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\josef\AppData\Local\Temp\surefire8452530580852092638\surefirebooter-20250914180235620_3.jar C:\Users\josef\AppData\Local\Temp\surefire8452530580852092638 2025-09-14T18-02-35_477-jvmRun1 surefire-20250914180235620_1tmp surefire_0-20250914180235620_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\josef\Desktop\vivon-core\target\test-classes;C:\Users\josef\Desktop\vivon-core\target\classes;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter-actuator\3.5.0\spring-boot-starter-actuator-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter\3.5.0\spring-boot-starter-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot\3.5.0\spring-boot-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.5.0\spring-boot-autoconfigure-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.5.0\spring-boot-starter-logging-3.5.0.jar;C:\Users\josef\.m2\repository\ch\qos\logback\logback-classic\1.5.18\logback-classic-1.5.18.jar;C:\Users\josef\.m2\repository\ch\qos\logback\logback-core\1.5.18\logback-core-1.5.18.jar;C:\Users\josef\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.24.3\log4j-to-slf4j-2.24.3.jar;C:\Users\josef\.m2\repository\org\apache\logging\log4j\log4j-api\2.24.3\log4j-api-2.24.3.jar;C:\Users\josef\.m2\repository\org\slf4j\jul-to-slf4j\2.0.17\jul-to-slf4j-2.0.17.jar;C:\Users\josef\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\josef\.m2\repository\org\yaml\snakeyaml\2.4\snakeyaml-2.4.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-actuator-autoconfigure\3.5.0\spring-boot-actuator-autoconfigure-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-actuator\3.5.0\spring-boot-actuator-3.5.0.jar;C:\Users\josef\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.19.0\jackson-datatype-jsr310-2.19.0.jar;C:\Users\josef\.m2\repository\io\micrometer\micrometer-observation\1.15.0\micrometer-observation-1.15.0.jar;C:\Users\josef\.m2\repository\io\micrometer\micrometer-commons\1.15.0\micrometer-commons-1.15.0.jar;C:\Users\josef\.m2\repository\io\micrometer\micrometer-jakarta9\1.15.0\micrometer-jakarta9-1.15.0.jar;C:\Users\josef\.m2\repository\io\micrometer\micrometer-core\1.15.0\micrometer-core-1.15.0.jar;C:\Users\josef\.m2\repository\org\hdrhistogram\HdrHistogram\2.2.2\HdrHistogram-2.2.2.jar;C:\Users\josef\.m2\repository\org\latencyutils\LatencyUtils\2.0.3\LatencyUtils-2.0.3.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter-data-neo4j\3.5.0\spring-boot-starter-data-neo4j-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\data\spring-data-neo4j\7.5.0\spring-data-neo4j-7.5.0.jar;C:\Users\josef\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\josef\.m2\repository\org\apiguardian\apiguardian-api\1.1.1\apiguardian-api-1.1.1.jar;C:\Users\josef\.m2\repository\org\neo4j\neo4j-cypher-dsl\2024.5.1\neo4j-cypher-dsl-2024.5.1.jar;C:\Users\josef\.m2\repository\org\neo4j\neo4j-cypher-dsl-schema-name-support\2024.5.1\neo4j-cypher-dsl-schema-name-support-2024.5.1.jar;C:\Users\josef\.m2\repository\org\neo4j\driver\neo4j-java-driver\5.28.5\neo4j-java-driver-5.28.5.jar;C:\Users\josef\.m2\repository\org\neo4j\bolt\neo4j-bolt-connection\2.0.0\neo4j-bolt-connection-2.0.0.jar;C:\Users\josef\.m2\repository\org\neo4j\bolt\neo4j-bolt-connection-netty\2.0.0\neo4j-bolt-connection-netty-2.0.0.jar;C:\Users\josef\.m2\repository\io\netty\netty-handler\4.1.121.Final\netty-handler-4.1.121.Final.jar;C:\Users\josef\.m2\repository\io\netty\netty-common\4.1.121.Final\netty-common-4.1.121.Final.jar;C:\Users\josef\.m2\repository\io\netty\netty-resolver\4.1.121.Final\netty-resolver-4.1.121.Final.jar;C:\Users\josef\.m2\repository\io\netty\netty-buffer\4.1.121.Final\netty-buffer-4.1.121.Final.jar;C:\Users\josef\.m2\repository\io\netty\netty-transport\4.1.121.Final\netty-transport-4.1.121.Final.jar;C:\Users\josef\.m2\repository\io\netty\netty-transport-native-unix-common\4.1.121.Final\netty-transport-native-unix-common-4.1.121.Final.jar;C:\Users\josef\.m2\repository\io\netty\netty-codec\4.1.121.Final\netty-codec-4.1.121.Final.jar;C:\Users\josef\.m2\repository\io\netty\netty-tcnative-classes\2.0.70.Final\netty-tcnative-classes-2.0.70.Final.jar;C:\Users\josef\.m2\repository\org\neo4j\bolt\neo4j-bolt-connection-pooled\2.0.0\neo4j-bolt-connection-pooled-2.0.0.jar;C:\Users\josef\.m2\repository\org\neo4j\bolt\neo4j-bolt-connection-routed\2.0.0\neo4j-bolt-connection-routed-2.0.0.jar;C:\Users\josef\.m2\repository\org\reactivestreams\reactive-streams\1.0.4\reactive-streams-1.0.4.jar;C:\Users\josef\.m2\repository\io\projectreactor\reactor-core\3.7.6\reactor-core-3.7.6.jar;C:\Users\josef\.m2\repository\org\springframework\spring-beans\6.2.7\spring-beans-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\spring-context\6.2.7\spring-context-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\spring-tx\6.2.7\spring-tx-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\data\spring-data-commons\3.5.0\spring-data-commons-3.5.0.jar;C:\Users\josef\.m2\repository\org\slf4j\slf4j-api\2.0.17\slf4j-api-2.0.17.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.5.0\spring-boot-starter-jdbc-3.5.0.jar;C:\Users\josef\.m2\repository\com\zaxxer\HikariCP\6.3.0\HikariCP-6.3.0.jar;C:\Users\josef\.m2\repository\org\springframework\spring-jdbc\6.2.7\spring-jdbc-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.5.0\spring-boot-starter-web-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.5.0\spring-boot-starter-json-3.5.0.jar;C:\Users\josef\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.19.0\jackson-datatype-jdk8-2.19.0.jar;C:\Users\josef\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.19.0\jackson-module-parameter-names-2.19.0.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.5.0\spring-boot-starter-tomcat-3.5.0.jar;C:\Users\josef\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.41\tomcat-embed-core-10.1.41.jar;C:\Users\josef\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.41\tomcat-embed-el-10.1.41.jar;C:\Users\josef\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.41\tomcat-embed-websocket-10.1.41.jar;C:\Users\josef\.m2\repository\org\springframework\spring-web\6.2.7\spring-web-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\spring-webmvc\6.2.7\spring-webmvc-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\spring-expression\6.2.7\spring-expression-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter-websocket\3.5.0\spring-boot-starter-websocket-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\spring-messaging\6.2.7\spring-messaging-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\spring-websocket\6.2.7\spring-websocket-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.5.0\spring-boot-starter-security-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\spring-aop\6.2.7\spring-aop-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\security\spring-security-config\6.5.0\spring-security-config-6.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\security\spring-security-core\6.5.0\spring-security-core-6.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\security\spring-security-crypto\6.5.0\spring-security-crypto-6.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\security\spring-security-web\6.5.0\spring-security-web-6.5.0.jar;C:\Users\josef\.m2\repository\com\mysql\mysql-connector-j\9.2.0\mysql-connector-j-9.2.0.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-starter-test\3.5.0\spring-boot-starter-test-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-test\3.5.0\spring-boot-test-3.5.0.jar;C:\Users\josef\.m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\3.5.0\spring-boot-test-autoconfigure-3.5.0.jar;C:\Users\josef\.m2\repository\com\jayway\jsonpath\json-path\2.9.0\json-path-2.9.0.jar;C:\Users\josef\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar;C:\Users\josef\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar;C:\Users\josef\.m2\repository\net\minidev\json-smart\2.5.2\json-smart-2.5.2.jar;C:\Users\josef\.m2\repository\net\minidev\accessors-smart\2.5.2\accessors-smart-2.5.2.jar;C:\Users\josef\.m2\repository\org\ow2\asm\asm\9.7.1\asm-9.7.1.jar;C:\Users\josef\.m2\repository\org\assertj\assertj-core\3.27.3\assertj-core-3.27.3.jar;C:\Users\josef\.m2\repository\net\bytebuddy\byte-buddy\1.17.5\byte-buddy-1.17.5.jar;C:\Users\josef\.m2\repository\org\awaitility\awaitility\4.3.0\awaitility-4.3.0.jar;C:\Users\josef\.m2\repository\org\hamcrest\hamcrest\3.0\hamcrest-3.0.jar;C:\Users\josef\.m2\repository\org\junit\jupiter\junit-jupiter\5.12.2\junit-jupiter-5.12.2.jar;C:\Users\josef\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.12.2\junit-jupiter-api-5.12.2.jar;C:\Users\josef\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\josef\.m2\repository\org\junit\platform\junit-platform-commons\1.12.2\junit-platform-commons-1.12.2.jar;C:\Users\josef\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.12.2\junit-jupiter-params-5.12.2.jar;C:\Users\josef\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.12.2\junit-jupiter-engine-5.12.2.jar;C:\Users\josef\.m2\repository\org\junit\platform\junit-platform-engine\1.12.2\junit-platform-engine-1.12.2.jar;C:\Users\josef\.m2\repository\org\mockito\mockito-core\5.17.0\mockito-core-5.17.0.jar;C:\Users\josef\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.5\byte-buddy-agent-1.17.5.jar;C:\Users\josef\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\josef\.m2\repository\org\mockito\mockito-junit-jupiter\5.17.0\mockito-junit-jupiter-5.17.0.jar;C:\Users\josef\.m2\repository\org\skyscreamer\jsonassert\1.5.3\jsonassert-1.5.3.jar;C:\Users\josef\.m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;C:\Users\josef\.m2\repository\org\springframework\spring-core\6.2.7\spring-core-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\spring-jcl\6.2.7\spring-jcl-6.2.7.jar;C:\Users\josef\.m2\repository\org\springframework\spring-test\6.2.7\spring-test-6.2.7.jar;C:\Users\josef\.m2\repository\org\xmlunit\xmlunit-core\2.10.1\xmlunit-core-2.10.1.jar;C:\Users\josef\.m2\repository\io\jsonwebtoken\jjwt-api\0.11.5\jjwt-api-0.11.5.jar;C:\Users\josef\.m2\repository\io\jsonwebtoken\jjwt-impl\0.11.5\jjwt-impl-0.11.5.jar;C:\Users\josef\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.11.5\jjwt-jackson-0.11.5.jar;C:\Users\josef\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.19.0\jackson-databind-2.19.0.jar;C:\Users\josef\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.19.0\jackson-annotations-2.19.0.jar;C:\Users\josef\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.19.0\jackson-core-2.19.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -34,7 +34,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="FILE_LOG_CHARSET" value="UTF-8"/>
     <property name="java.awt.headless" value="true"/>
-    <property name="surefire.real.class.path" value="C:\Users\josef\AppData\Local\Temp\surefire4076160881182972834\surefirebooter-20250914143852440_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\josef\AppData\Local\Temp\surefire8452530580852092638\surefirebooter-20250914180235620_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.5+11-LTS"/>
@@ -53,7 +53,7 @@
     <property name="user.dir" value="C:\Users\josef\Desktop\vivon-core"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="PID" value="3736"/>
+    <property name="PID" value="17700"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
     <property name="native.encoding" value="Cp1252"/>
@@ -66,9 +66,9 @@
     <property name="java.class.version" value="65.0"/>
     <property name="LOGGED_APPLICATION_NAME" value="[core] "/>
   </properties>
-  <testcase name="contextLoads" classname="com.vivoninc.core.CoreApplicationTests" time="1.059">
-    <system-out><![CDATA[14:38:53.754 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.vivoninc.core.CoreApplicationTests]: CoreApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-14:38:53.965 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.vivoninc.core.CoreApplication for test class com.vivoninc.core.CoreApplicationTests
+  <testcase name="contextLoads" classname="com.vivoninc.core.CoreApplicationTests" time="0.839">
+    <system-out><![CDATA[18:02:36.719 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.vivoninc.core.CoreApplicationTests]: CoreApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+18:02:36.893 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.vivoninc.core.CoreApplication for test class com.vivoninc.core.CoreApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -79,45 +79,45 @@
 
  :: Spring Boot ::                (v3.5.0)
 
-2025-09-14T14:38:54.696+02:00  INFO 3736 --- [core] [           main] com.vivoninc.core.CoreApplicationTests   : Starting CoreApplicationTests using Java 21.0.5 with PID 3736 (started by josef in C:\Users\josef\Desktop\vivon-core)
-2025-09-14T14:38:54.700+02:00 DEBUG 3736 --- [core] [           main] com.vivoninc.core.CoreApplicationTests   : Running with Spring Boot v3.5.0, Spring v6.2.7
-2025-09-14T14:38:54.700+02:00  INFO 3736 --- [core] [           main] com.vivoninc.core.CoreApplicationTests   : No active profile set, falling back to 1 default profile: "default"
-2025-09-14T14:38:56.374+02:00 DEBUG 3736 --- [core] [           main] o.s.d.n.repository.config.StartupLogger  : Bootstrapping reactive Neo4j repositories based on SDN v7.5.0 with Spring Data Commons v3.5.0 and Neo4j Driver v5.28.5.
-2025-09-14T14:38:56.378+02:00  INFO 3736 --- [core] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
-2025-09-14T14:38:56.423+02:00  INFO 3736 --- [core] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 0 Neo4j repository interfaces.
-2025-09-14T14:38:56.428+02:00 DEBUG 3736 --- [core] [           main] o.s.d.n.repository.config.StartupLogger  : Bootstrapping imperative Neo4j repositories based on SDN v7.5.0 with Spring Data Commons v3.5.0 and Neo4j Driver v5.28.5.
-2025-09-14T14:38:56.428+02:00  INFO 3736 --- [core] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
-2025-09-14T14:38:56.435+02:00  INFO 3736 --- [core] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 0 Neo4j repository interfaces.
-2025-09-14T14:38:57.518+02:00  INFO 3736 --- [core] [           main] o.neo4j.driver.internal.DriverFactory    : Direct driver instance 190245996 created for server address localhost:7687
+2025-09-14T18:02:37.588+02:00  INFO 17700 --- [core] [           main] com.vivoninc.core.CoreApplicationTests   : Starting CoreApplicationTests using Java 21.0.5 with PID 17700 (started by josef in C:\Users\josef\Desktop\vivon-core)
+2025-09-14T18:02:37.589+02:00 DEBUG 17700 --- [core] [           main] com.vivoninc.core.CoreApplicationTests   : Running with Spring Boot v3.5.0, Spring v6.2.7
+2025-09-14T18:02:37.590+02:00  INFO 17700 --- [core] [           main] com.vivoninc.core.CoreApplicationTests   : No active profile set, falling back to 1 default profile: "default"
+2025-09-14T18:02:38.981+02:00 DEBUG 17700 --- [core] [           main] o.s.d.n.repository.config.StartupLogger  : Bootstrapping reactive Neo4j repositories based on SDN v7.5.0 with Spring Data Commons v3.5.0 and Neo4j Driver v5.28.5.
+2025-09-14T18:02:38.982+02:00  INFO 17700 --- [core] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2025-09-14T18:02:39.011+02:00  INFO 17700 --- [core] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 19 ms. Found 0 Neo4j repository interfaces.
+2025-09-14T18:02:39.018+02:00 DEBUG 17700 --- [core] [           main] o.s.d.n.repository.config.StartupLogger  : Bootstrapping imperative Neo4j repositories based on SDN v7.5.0 with Spring Data Commons v3.5.0 and Neo4j Driver v5.28.5.
+2025-09-14T18:02:39.019+02:00  INFO 17700 --- [core] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Neo4j repositories in DEFAULT mode.
+2025-09-14T18:02:39.024+02:00  INFO 17700 --- [core] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 0 Neo4j repository interfaces.
+2025-09-14T18:02:40.141+02:00  INFO 17700 --- [core] [           main] o.neo4j.driver.internal.DriverFactory    : Direct driver instance 184667021 created for server address localhost:7687
 Starting Neo4j initialization...
-2025-09-14T14:38:57.745+02:00 DEBUG 3736 --- [core] [           main] org.springframework.data.neo4j.cypher    : Executing:
+2025-09-14T18:02:40.348+02:00 DEBUG 17700 --- [core] [           main] org.springframework.data.neo4j.cypher    : Executing:
 RETURN 'Connection successful' as message
-2025-09-14T14:38:57.807+02:00 DEBUG 3736 --- [core] [           main] o.n.d.io.netty.channel.DefaultChannelId  : -Dio.netty.processId: 3736 (auto-detected)
-2025-09-14T14:38:57.814+02:00 DEBUG 3736 --- [core] [           main] org.neo4j.driver.io.netty.util.NetUtil   : -Djava.net.preferIPv4Stack: false
-2025-09-14T14:38:57.814+02:00 DEBUG 3736 --- [core] [           main] org.neo4j.driver.io.netty.util.NetUtil   : -Djava.net.preferIPv6Addresses: false
-2025-09-14T14:38:57.820+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.util.NetUtilInitializations    : Loopback interface: loopback_0 (Software Loopback Interface 1, 0:0:0:0:0:0:0:1)
-2025-09-14T14:38:57.823+02:00 DEBUG 3736 --- [core] [           main] org.neo4j.driver.io.netty.util.NetUtil   : Failed to get SOMAXCONN from sysctl and file \proc\sys\net\core\somaxconn. Default: 200
-2025-09-14T14:38:57.824+02:00 DEBUG 3736 --- [core] [           main] o.n.d.io.netty.channel.DefaultChannelId  : -Dio.netty.machineId: 00:ff:ae:ff:fe:7f:e9:37 (auto-detected)
-2025-09-14T14:38:57.840+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.netty.util.ResourceLeakDetector  : -Dio.netty.leakDetection.level: simple
-2025-09-14T14:38:57.844+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.netty.util.ResourceLeakDetector  : -Dio.netty.leakDetection.targetRecords: 4
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.numHeapArenas: 16
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.numDirectArenas: 16
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.pageSize: 8192
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.maxOrder: 9
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.chunkSize: 4194304
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.smallCacheSize: 256
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.normalCacheSize: 64
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.maxCachedBufferCapacity: 32768
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.cacheTrimInterval: 8192
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.cacheTrimIntervalMillis: 0
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.useCacheForAllThreads: false
-2025-09-14T14:38:57.881+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.maxCachedByteBuffersPerChunk: 1023
-2025-09-14T14:38:57.883+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.disableCacheFinalizersForFastThreadLocalThreads: false
-2025-09-14T14:38:57.913+02:00 DEBUG 3736 --- [core] [           main] o.n.driver.io.netty.buffer.ByteBufUtil   : -Dio.netty.allocator.type: pooled
-2025-09-14T14:38:57.913+02:00 DEBUG 3736 --- [core] [           main] o.n.driver.io.netty.buffer.ByteBufUtil   : -Dio.netty.threadLocalDirectBufferSize: 0
-2025-09-14T14:38:57.913+02:00 DEBUG 3736 --- [core] [           main] o.n.driver.io.netty.buffer.ByteBufUtil   : -Dio.netty.maxThreadLocalCharBufferSize: 16384
-2025-09-14T14:38:57.923+02:00 DEBUG 3736 --- [core] [           main] o.n.d.i.n.b.ChannelInitializerExtensions : -Dio.netty.bootstrap.extensions: null
-2025-09-14T14:38:57.963+02:00 DEBUG 3736 --- [core] [o4jDriverIO-2-1] .d.o.n.b.c.n.NettyBoltConnectionProvider : Failed to establish BoltConnection localhost:7687
+2025-09-14T18:02:40.412+02:00 DEBUG 17700 --- [core] [           main] o.n.d.io.netty.channel.DefaultChannelId  : -Dio.netty.processId: 17700 (auto-detected)
+2025-09-14T18:02:40.420+02:00 DEBUG 17700 --- [core] [           main] org.neo4j.driver.io.netty.util.NetUtil   : -Djava.net.preferIPv4Stack: false
+2025-09-14T18:02:40.420+02:00 DEBUG 17700 --- [core] [           main] org.neo4j.driver.io.netty.util.NetUtil   : -Djava.net.preferIPv6Addresses: false
+2025-09-14T18:02:40.426+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.util.NetUtilInitializations    : Loopback interface: loopback_0 (Software Loopback Interface 1, 0:0:0:0:0:0:0:1)
+2025-09-14T18:02:40.427+02:00 DEBUG 17700 --- [core] [           main] org.neo4j.driver.io.netty.util.NetUtil   : Failed to get SOMAXCONN from sysctl and file \proc\sys\net\core\somaxconn. Default: 200
+2025-09-14T18:02:40.430+02:00 DEBUG 17700 --- [core] [           main] o.n.d.io.netty.channel.DefaultChannelId  : -Dio.netty.machineId: 00:ff:ae:ff:fe:7f:e9:37 (auto-detected)
+2025-09-14T18:02:40.440+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.netty.util.ResourceLeakDetector  : -Dio.netty.leakDetection.level: simple
+2025-09-14T18:02:40.441+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.netty.util.ResourceLeakDetector  : -Dio.netty.leakDetection.targetRecords: 4
+2025-09-14T18:02:40.463+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.numHeapArenas: 16
+2025-09-14T18:02:40.463+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.numDirectArenas: 16
+2025-09-14T18:02:40.463+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.pageSize: 8192
+2025-09-14T18:02:40.464+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.maxOrder: 9
+2025-09-14T18:02:40.464+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.chunkSize: 4194304
+2025-09-14T18:02:40.464+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.smallCacheSize: 256
+2025-09-14T18:02:40.464+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.normalCacheSize: 64
+2025-09-14T18:02:40.464+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+2025-09-14T18:02:40.464+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.cacheTrimInterval: 8192
+2025-09-14T18:02:40.464+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.cacheTrimIntervalMillis: 0
+2025-09-14T18:02:40.464+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.useCacheForAllThreads: false
+2025-09-14T18:02:40.464+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.maxCachedByteBuffersPerChunk: 1023
+2025-09-14T18:02:40.465+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.buffer.PooledByteBufAllocator  : -Dio.netty.allocator.disableCacheFinalizersForFastThreadLocalThreads: false
+2025-09-14T18:02:40.474+02:00 DEBUG 17700 --- [core] [           main] o.n.driver.io.netty.buffer.ByteBufUtil   : -Dio.netty.allocator.type: pooled
+2025-09-14T18:02:40.474+02:00 DEBUG 17700 --- [core] [           main] o.n.driver.io.netty.buffer.ByteBufUtil   : -Dio.netty.threadLocalDirectBufferSize: 0
+2025-09-14T18:02:40.475+02:00 DEBUG 17700 --- [core] [           main] o.n.driver.io.netty.buffer.ByteBufUtil   : -Dio.netty.maxThreadLocalCharBufferSize: 16384
+2025-09-14T18:02:40.480+02:00 DEBUG 17700 --- [core] [           main] o.n.d.i.n.b.ChannelInitializerExtensions : -Dio.netty.bootstrap.extensions: null
+2025-09-14T18:02:40.505+02:00 DEBUG 17700 --- [core] [o4jDriverIO-2-1] .d.o.n.b.c.n.NettyBoltConnectionProvider : Failed to establish BoltConnection localhost:7687
 
 org.neo4j.bolt.connection.exception.BoltServiceUnavailableException: Unable to connect to localhost:7687, ensure the database is running and that there is a working network connection to it.
 	at org.neo4j.bolt.connection.netty.impl.async.connection.ChannelConnectedListener.databaseUnavailableError(ChannelConnectedListener.java:81) ~[neo4j-bolt-connection-netty-2.0.0.jar:na]
@@ -156,52 +156,52 @@ Caused by: java.net.ConnectException: Connection refused: getsockopt
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.121.Final.jar:4.1.121.Final]
 	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
 
-2025-09-14T14:38:58.391+02:00 TRACE 3736 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
+2025-09-14T18:02:40.848+02:00 TRACE 17700 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
 	c.v.C.CorsTestController:
-	{OPTIONS [/api/test]}: handleOptions()
 	{GET [/api/test]}: testCors()
-2025-09-14T14:38:58.396+02:00 TRACE 3736 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
+	{OPTIONS [/api/test]}: handleOptions()
+2025-09-14T18:02:40.851+02:00 TRACE 17700 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
 	c.v.C.DebugController:
+	{GET [/debug/cors]}: testCors()
 	{OPTIONS [/debug/cors]}: handleCorsOptions()
 	{POST [/debug/auth-test]}: testAuthEndpoint(Map)
-	{GET [/debug/cors]}: testCors()
-2025-09-14T14:38:58.400+02:00 TRACE 3736 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
+2025-09-14T18:02:40.854+02:00 TRACE 17700 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
 	c.v.C.LoginAuthorization:
 	{POST [/api/auth/register]}: register(Registration)
 	{POST [/api/auth/login]}: login(LoginRequest)
-2025-09-14T14:38:58.402+02:00 TRACE 3736 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
+2025-09-14T18:02:40.856+02:00 TRACE 17700 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
 	c.v.C.MessageController:
-	{GET [/api/messages/conversationExists]}: conversationExists(int,int)
 	{GET [/api/messages/last25]}: getLast25Messages(int)
-	{GET [/api/messages/before]}: getMessagesBefore(int,String,int)
 	{POST [/api/messages/createConversation]}: createConversation(String,String,List)
-	{POST [/api/messages/send]}: postMethodName(Message)
+	{POST [/api/messages/send]}: sendMessage(Message)
+	{GET [/api/messages/before]}: getMessagesBefore(int,String,int)
+	{GET [/api/messages/conversationExists]}: conversationExists(int,int)
+	{GET [/api/messages/getConversationGroups]}: getConversationGroups(int)
 	{POST [/api/messages/addToConv]}: addUserToConversation(Map)
 	{GET [/api/messages/getDirectConversations]}: getDirectConversations(int,int)
-	{GET [/api/messages/getConversationGroups]}: getConversationGroups(int)
-2025-09-14T14:38:58.407+02:00 TRACE 3736 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
+2025-09-14T18:02:40.859+02:00 TRACE 17700 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
 	c.v.C.UserController:
-	{POST [/api/users/sendFriendRequest]}: sendFriendRequest(Map)
-	{GET [/api/users/me]}: getMyUserId()
-	{GET [/api/users/friends]}: getUsersFriends()
-	{DELETE [/api/users/removeFriend]}: removeFriend(int,int)
-	{GET [/api/users/incFriendRequests]}: getFriendRequests(int)
+	{POST [/api/users/acceptFriendRequest]}: acceptFriendRequest(Map)
 	{GET [/api/users/getFriendDescription]}: getFriendDescription(int,int)
 	{POST [/api/users/declineFriendRequest]}: declineFriendRequest(Map)
 	{PUT [/api/users/addDescription]}: setFriendDescription(Map)
 	{GET [/api/users/getUsernameAndAvatar]}: getUsernameAndAvatar(String)
-	{POST [/api/users/acceptFriendRequest]}: acceptFriendRequest(Map)
-2025-09-14T14:38:58.416+02:00 TRACE 3736 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
+	{GET [/api/users/friends]}: getUsersFriends()
+	{DELETE [/api/users/removeFriend]}: removeFriend(int,int)
+	{GET [/api/users/incFriendRequests]}: getFriendRequests(int)
+	{POST [/api/users/sendFriendRequest]}: sendFriendRequest(Map)
+	{GET [/api/users/me]}: getMyUserId()
+2025-09-14T18:02:40.876+02:00 TRACE 17700 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 
 	o.s.b.a.w.s.e.BasicErrorController:
 	{ [/error]}: error(HttpServletRequest)
 	{ [/error], produces [text/html]}: errorHtml(HttpServletRequest,HttpServletResponse)
-2025-09-14T14:38:58.435+02:00 DEBUG 3736 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 27 mappings in 'requestMappingHandlerMapping'
-2025-09-14T14:38:58.796+02:00  INFO 3736 --- [core] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
-2025-09-14T14:38:58.849+02:00 DEBUG 3736 --- [core] [           main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-09-14T18:02:40.902+02:00 DEBUG 17700 --- [core] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 27 mappings in 'requestMappingHandlerMapping'
+2025-09-14T18:02:41.277+02:00  INFO 17700 --- [core] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-09-14T18:02:41.317+02:00 DEBUG 17700 --- [core] [           main] swordEncoderAuthenticationManagerBuilder : No authenticationProviders and no parentAuthenticationManager defined. Returning null.
 SECURITY CONFIG: Building security filter chain...
 SECURITY CONFIG: Authorization configured - OPTIONS permitted
-2025-09-14T14:38:59.083+02:00 DEBUG 3736 --- [core] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
-2025-09-14T14:38:59.927+02:00  INFO 3736 --- [core] [           main] com.vivoninc.core.CoreApplicationTests   : Started CoreApplicationTests in 5.689 seconds (process running for 7.314)
+2025-09-14T18:02:41.490+02:00 DEBUG 17700 --- [core] [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-09-14T18:02:42.127+02:00  INFO 17700 --- [core] [           main] com.vivoninc.core.CoreApplicationTests   : Started CoreApplicationTests in 4.958 seconds (process running for 6.333)
 ]]></system-out>
     <system-err><![CDATA[Neo4j connection failed: Unable to connect to localhost:7687, ensure the database is running and that there is a working network connection to it.; Error code 'N/A'
 Error during Neo4j initialization: Unable to connect to localhost:7687, ensure the database is running and that there is a working network connection to it.; Error code 'N/A'

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
+import com.vivoninc.core.MessageService;
 
 
 
@@ -27,9 +28,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/messages")
 public class MessageController {
     private MessageDAO messageDAO;
+    private MessageService messageService;
 
-    public MessageController(MessageDAO messageDAO){
+    public MessageController(MessageDAO messageDAO, MessageService messageService){
         this.messageDAO = messageDAO;
+        this.messageService = messageService;
     }
     
     @GetMapping("/last25")
@@ -58,8 +61,14 @@ public class MessageController {
     }
 
     @PostMapping("/send")
-    public Message postMethodName(@RequestBody Message message) {
-        messageDAO.send(message);
+    public Message sendMessage(@RequestBody Message message) {
+        System.out.println("=== Controller received message ===");
+        System.out.println("Message: " + message.getContent());
+        System.out.println("Calling MessageService...");
+        
+        messageService.sendMessage(message);
+        
+        System.out.println("MessageService call completed");
         return message;
     }
 
