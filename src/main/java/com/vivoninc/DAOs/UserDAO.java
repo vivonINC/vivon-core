@@ -76,7 +76,11 @@ public String sendFriendRequest(int fromUserId, int toUserId) {
     
     try {
 
-boolean isFriend = neo4jClient.query("""
+        if (fromUserId == toUserId) {
+            return "You cannot befriend yourself";
+        }
+
+    boolean isFriend = neo4jClient.query("""
         MATCH (from:User {id: $fromID})-[:FRIEND]-(to:User {id: $toID})
         RETURN count(*) > 0 AS isFriend
     """)

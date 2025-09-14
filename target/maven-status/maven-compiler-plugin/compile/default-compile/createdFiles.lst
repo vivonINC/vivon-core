@@ -5,10 +5,12 @@ com\vivoninc\DAOs\MessageDAO.class
 com\vivoninc\model\ConversationMember$Role.class
 com\vivoninc\core\ChatWebSocketHandler.class
 com\vivoninc\core\Neo4jTransactionConfig.class
+com\vivoninc\core\OptionsLoggingFilter.class
 com\vivoninc\core\SecurityConfig.class
 com\vivoninc\core\JwtHandshakeInterceptor.class
 com\vivoninc\core\MessageService.class
 com\vivoninc\model\Conversation$Type.class
+com\vivoninc\Controllers\DebugController.class
 com\vivoninc\model\Conversation.class
 com\vivoninc\core\WebSocketConfig.class
 com\vivoninc\DTOs\LoginRequest.class
@@ -18,6 +20,7 @@ com\vivoninc\core\Neo4jInitializer.class
 com\vivoninc\DTOs\Registration.class
 com\vivoninc\model\ConversationMember.class
 com\vivoninc\model\Message$MsgType.class
+com\vivoninc\Controllers\CorsTestController.class
 com\vivoninc\core\JWTutil.class
 com\vivoninc\model\User.class
 com\vivoninc\core\JwtAuthenticationFilter.class
