@@ -14,7 +14,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -35,11 +34,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));  // Use wildcard for origins
-        configuration.setAllowedMethods(List.of("*"));  // Or keep your specific list if preferred
-        configuration.setAllowedHeaders(List.of("*"));  // Echoes requested headers in response
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization"));
-        configuration.setAllowCredentials(false);  // Set to false; your JWT setup doesn't need true
+        configuration.setAllowCredentials(false);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -53,25 +52,18 @@ public class SecurityConfig {
         System.out.println("SECURITY CONFIG: Building security filter chain...");
         
         return http
-            // CORS FIRST: Processes preflights before security checks
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             
-            // Disable CSRF (stateless API)
             .csrf(csrf -> csrf.disable())
             
-            // Stateless sessions
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             
-            // Authorization: OPTIONS FIRST to permit all preflights
             .authorizeHttpRequests(auth -> {
                 auth
-                    // Permit ALL OPTIONS preflights globally (no auth needed)
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     
-                    // Public static paths
                     .requestMatchers("/", "/health", "/error", "/favicon.ico").permitAll()
                     
-                    // Public API paths (includes /api/auth/register POST)
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/test").permitAll()
                     .requestMatchers("/debug/**").permitAll()
@@ -84,7 +76,6 @@ public class SecurityConfig {
                 System.out.println("SECURITY CONFIG: Authorization configured - OPTIONS permitted");
             })
             
-            // Disable form/basic login
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable())
             

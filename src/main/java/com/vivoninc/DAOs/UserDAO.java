@@ -54,7 +54,7 @@ public class UserDAO {
         
         long conversationId = keyHolder.getKey().longValue();
         
-        // Add both users to the conversation
+        // Add both users
         String memberSql = "INSERT INTO conversation_members (conversation_id, user_id) VALUES (?, ?)";
         jdbcTemplate.update(memberSql, conversationId, userID);
         jdbcTemplate.update(memberSql, conversationId, requesterID);
@@ -180,7 +180,7 @@ public Collection<User> getUsersIncommingFriendReq(int id) {
 }
 
      public Collection<User> getUsersFriends(int id) {
-        // Step 1: get friend IDs from Neo4j
+        //get friend IDs from Neo4j
         List<Integer> friendIds = new ArrayList<>(neo4jClient.query("""
         MATCH (u:User {id: $id})-[:FRIEND]-(friend:User)
         RETURN friend.id AS friendId
@@ -191,7 +191,7 @@ public Collection<User> getUsersIncommingFriendReq(int id) {
         .all());
 
 
-        // Step 2: query MySQL for full user info
+        // query MySQL for full user info
         if (friendIds.isEmpty()) {
             return Collections.emptyList();
         }
@@ -218,7 +218,6 @@ public Collection<Map<String, Object>> getUserNameAndAvatar(List<String> userIDs
     String placeholders = String.join(",", Collections.nCopies(userIDs.size(), "?"));
     String sql = "SELECT username, avatar FROM users WHERE id IN (" + placeholders + ")";
     
-    // Convert List<String> to Object[] for the query
     Object[] params = userIDs.toArray();
     return jdbcTemplate.queryForList(sql, params);
 }
@@ -279,7 +278,7 @@ public Collection<Map<String, Object>> getUserNameAndAvatar(List<String> userIDs
             .fetchAs(String.class)
             .mappedBy((typeSystem, record) -> {
                 Value descValue = record.get("description");
-                return descValue.isNull() ? null : descValue.asString(); // Handle null values
+                return descValue.isNull() ? null : descValue.asString();
             })
             .one()
             .orElse(null);

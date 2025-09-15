@@ -137,7 +137,6 @@ public class MessageDAO {
             throw new IllegalArgumentException("Conversation type must be 'direct' or 'group'");
         }
 
-        // For direct conversations ensure 2 participants
         if ("direct".equals(conversationType) && participantIds.size() != 2) {
             throw new IllegalArgumentException("Direct conversations must have exactly 2 participants");
         }
@@ -177,7 +176,7 @@ public class MessageDAO {
             Integer userId = participantIds.get(i);
             String role = "member"; // Default role
             
-            // For group conversations make the first participant owner
+            // For group conversations make first participant owner
             if ("group".equals(conversationType) && i == 0) {
                 role = "owner";
             }
@@ -229,15 +228,8 @@ public class MessageDAO {
         return count != null && count > 0;
     }
 
-    /**
-     * Add a user to an existing conversation
-     * @param conversationId The conversation ID
-     * @param userId The user ID to add
-     * @param role The role to assign (member, admin, owner)
-     * @return true if user was added successfully
-     */
+
     public boolean addUserToConversation(int userId, long conversationId) {
-        // Check if user is already in the conversation
         if (isUserMemberOfConversation(userId, conversationId)) {
             return false;
         }
@@ -251,12 +243,7 @@ public class MessageDAO {
         return rowsAffected > 0;
     }
 
-    /**
-     * Remove a user from a conversation
-     * @param conversationId The conversation ID
-     * @param userId The user ID to remove
-     * @return true if user was removed successfully
-     */
+
     public boolean removeUserFromConversation(long conversationId, int userId) {
         String sql = """
             DELETE FROM conversation_members 
@@ -289,6 +276,6 @@ public class MessageDAO {
             message.setID(generatedId.intValue());
         }
         
-        return message; // Return the message with the ID set
+        return message;
     }
 }

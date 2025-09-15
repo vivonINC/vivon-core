@@ -24,7 +24,7 @@ public class JWTutil {
     public String generateToken(int userId) {
         return Jwts.builder()
                 .claim("userId", userId)  // Store userId as a custom claim
-                .setSubject(String.valueOf(userId))  // Also set as subject for consistency
+                .setSubject(String.valueOf(userId))  // Also set as subject
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 24 hours
                 .signWith(key)

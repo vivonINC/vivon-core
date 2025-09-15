@@ -14,20 +14,12 @@ public class Neo4jInitializer {
     private Neo4jClient neo4jClient;
 
     @PostConstruct
-    @Transactional // Add transaction annotation
+    @Transactional
     public void init() {
         try {
             System.out.println("Starting Neo4j initialization...");
-            
-            // Test connection first
             testConnection();
-            
-            // Clear existing data (optional)
-            
-            // Insert mock data
             insertMockData();
-            
-            // Verify data was inserted
             verifyData();
             
             System.out.println("Neo4j initialization completed successfully");
@@ -65,7 +57,6 @@ public class Neo4jInitializer {
     private void insertMockData() {
         System.out.println("Inserting mock data...");
         
-        // Insert users first
         String createUsers = """
             MERGE (a:User {id: 1})
             MERGE (b:User {id: 2})
@@ -75,14 +66,12 @@ public class Neo4jInitializer {
         neo4jClient.query(createUsers).run();
         System.out.println("Users created");
         
-        // Create group
         String createGroup = """
             MERGE (gr1:Group {id: 1})
             """;
         neo4jClient.query(createGroup).run();
         System.out.println("Group created");
         
-        // Create relationships
         String createRelationships = """
             MATCH (c:User {id: 3}), (d:User {id: 4}), (gr1:Group {id: 1})
             MERGE (c)-[:IN_GROUP]->(gr1)

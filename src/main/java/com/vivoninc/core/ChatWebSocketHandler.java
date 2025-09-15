@@ -19,7 +19,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        String userId = getUserId(session); // Extract from session attributes or query params
+        String userId = getUserId(session); // Extract from session attributes
         sessions.put(userId, session);
         System.out.println("User " + userId + " connected");
     }
@@ -90,7 +90,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     }
     
     private String getUserId(WebSocketSession session) {
-        // Extract user ID from session attributes or query parameters
         return session.getAttributes().get("myID").toString();
     }
 }
